@@ -1,0 +1,15 @@
+# Local Batch Scripts & Private Utilities (Not pushed to GitHub)
+*.bat
+一鍵啟動.html
+
+# Local Data & Logs
+*.log
+*.tmp
+*.json
+scratch/
+.env*
+node_modules/
+
+# OS Generated Files
+.DS_Store
+Thumbs.db
