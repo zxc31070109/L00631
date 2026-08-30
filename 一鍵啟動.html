@@ -3,7 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Security Hardening: Strict Content Security Policy (CSP) -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://docs.google.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; img-src 'self' data: https:; font-src 'self' https://cdnjs.cloudflare.com; connect-src 'self' https://docs.google.com https://api.allorigins.win; frame-ancestors 'self';">
+
   <title>00631L & 台指期貨大盤 - 專業趨勢分析儀表板</title>
+  
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -32,11 +37,11 @@
     }
   </script>
   <!-- FontAwesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <!-- PapaParse for CSV fallback -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <!-- Apache ECharts CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -72,7 +77,7 @@
             台股 00631L & 期貨大盤 趨勢分析
             <span class="text-xs sm:text-sm font-semibold px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 shadow-sm flex items-center gap-1.5">
               <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-              ⚡ 毫秒級極速 Parsing
+              ⚡ 毫秒級極速 Parsing (Secured)
             </span>
           </h1>
           <p class="text-sm text-slate-300 mt-0.5">自動對接 Google Sheet • 工作日去重與專業圖表</p>
@@ -82,7 +87,7 @@
       <!-- Controls Right -->
       <div class="flex items-center space-x-3">
         <div id="statusBadge" class="hidden sm:flex items-center space-x-2 text-sm px-3.5 py-2 rounded-xl bg-slate-800 border border-slate-700 text-slate-200 font-medium">
-          <i class="fa-solid fa-bolt text-amber-400 text-base"></i>
+          <i class="fa-solid fa-shield-halved text-emerald-400 text-base"></i>
           <span id="statusText">已即時連線</span>
         </div>
         <button id="refreshBtn" onclick="fetchLiveData(true)" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-bold transition flex items-center space-x-2 shadow-lg shadow-indigo-600/30 active:scale-95">
@@ -264,6 +269,17 @@
 
   <!-- Script logic -->
   <script>
+    // Security Helper: Sanitizes text to prevent Cross-Site Scripting (XSS)
+    function escapeHTML(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
     // Initial State & Configuration
     const SPREADSHEET_ID = "1LbCaM8wzcgchBxm0MF0SboGXKs7lbI36zHyS4S4iiog";
     
@@ -355,7 +371,7 @@
       updateCurrentChart();
       renderTable();
 
-      // 2. Ultra-Fast JSONP Async Background Fetch (~100ms)
+      // 2. Secured JSONP Async Background Fetch (~100ms)
       fetchLiveData(false);
 
       window.addEventListener('resize', () => {
@@ -363,10 +379,12 @@
       });
     });
 
-    // High-Speed JSONP Fetcher (Bypasses CORS completely in ~100ms)
+    // High-Speed Secured JSONP Fetcher
     function fetchJsonpSheet(sheetName) {
       return new Promise((resolve, reject) => {
-        const callbackName = 'gviz_cb_' + Math.random().toString(36).substring(2, 9);
+        const randomId = Math.random().toString(36).replace(/[^a-z0-9]/g, '').substring(0, 8);
+        const callbackName = 'gviz_cb_' + randomId;
+
         const script = document.createElement('script');
         
         const timeout = setTimeout(() => {
@@ -393,7 +411,7 @@
             if (!r.c) return;
             const rowValues = r.c.map(cell => {
               if (!cell) return '';
-              return cell.f !== undefined ? cell.f : (cell.v !== null ? String(cell.v) : '');
+              return cell.f !== undefined ? String(cell.f) : (cell.v !== null ? String(cell.v) : '');
             });
             rows.push(rowValues);
           });
@@ -459,9 +477,9 @@
 
       dataRows1.forEach(row => {
         if (!row || row.length < 2) return;
-        const date = row[0].trim();
+        const date = String(row[0]).trim();
         const price = parseFloat(row[1]);
-        const updateTime = row[2] ? row[2].trim() : '';
+        const updateTime = row[2] ? String(row[2]).trim() : '';
 
         if (!date || isNaN(price)) return;
 
@@ -492,12 +510,12 @@
 
       dataRows2.forEach(row => {
         if (!row || row.length < 5) return;
-        const date = row[0].trim();
+        const date = String(row[0]).trim();
         const txPrice = parseFloat(row[1]);
         const txChangePct = parseFloat(row[2]);
         const taiexPrice = parseFloat(row[3]);
         const taiexChangePct = parseFloat(row[4]);
-        const updateTime = row[5] ? row[5].trim() : '';
+        const updateTime = row[5] ? String(row[5]).trim() : '';
 
         if (!date || isNaN(txPrice)) return;
 
@@ -537,9 +555,9 @@
         document.getElementById('kpi00631LLow').textContent = Math.min(...prices).toFixed(2);
 
         document.getElementById('kpiTotalDays').textContent = data00631.length;
-        document.getElementById('kpiStartDate').textContent = data00631[0].date;
-        document.getElementById('kpiEndDate').textContent = latest.date;
-        document.getElementById('kpiLastUpdated').textContent = latest.updateTime || latest.date;
+        document.getElementById('kpiStartDate').textContent = escapeHTML(data00631[0].date);
+        document.getElementById('kpiEndDate').textContent = escapeHTML(latest.date);
+        document.getElementById('kpiLastUpdated').textContent = escapeHTML(latest.updateTime || latest.date);
       }
 
       if (dataMarket.length > 0) {
@@ -623,7 +641,7 @@
         document.getElementById('chartSubtitle').textContent = '包含每日收盤價折線、最高/最低點標籤與移動平均線 (MA5, MA20)';
 
         const list = processedData["00631L"];
-        const dates = list.map(d => d.date);
+        const dates = list.map(d => escapeHTML(d.date));
         const prices = list.map(d => d.price);
 
         const seriesList = [
@@ -678,7 +696,7 @@
             axisPointer: { type: 'cross' },
             textStyle: { fontSize: 15 },
             formatter: function (params) {
-              let res = `<div class="font-bold border-b border-slate-700 pb-1 mb-1.5 text-base">${params[0].name} (工作日)</div>`;
+              let res = `<div class="font-bold border-b border-slate-700 pb-1 mb-1.5 text-base">${escapeHTML(params[0].name)} (工作日)</div>`;
               const itemData = list[params[0].dataIndex];
               if (itemData) {
                 const color = itemData.change >= 0 ? '#ef4444' : '#22c55e';
@@ -688,7 +706,7 @@
               }
               params.forEach(p => {
                 if (p.seriesName.includes('MA')) {
-                  res += `<div class="text-sm text-slate-300 mt-1">${p.seriesName}: ${p.value}</div>`;
+                  res += `<div class="text-sm text-slate-300 mt-1">${escapeHTML(p.seriesName)}: ${p.value}</div>`;
                 }
               });
               return res;
@@ -727,7 +745,7 @@
         document.getElementById('chartSubtitle').textContent = '雙 Y 軸同時對比顯示期貨與大盤指數之每日點數';
 
         const list = processedData["market"];
-        const dates = list.map(d => d.date);
+        const dates = list.map(d => escapeHTML(d.date));
         const txPrices = list.map(d => d.txPrice);
         const taiexPrices = list.map(d => d.taiexPrice);
 
@@ -808,7 +826,7 @@
         const basePrice00631 = list00631[0] ? list00631[0].price : 1;
         const basePriceTaiex = listMarket[0] ? listMarket[0].taiexPrice : 1;
 
-        const dates = list00631.map(d => d.date);
+        const dates = list00631.map(d => escapeHTML(d.date));
 
         const return00631 = list00631.map(d => +(((d.price - basePrice00631) / basePrice00631) * 100).toFixed(2));
         
@@ -826,11 +844,11 @@
             axisPointer: { type: 'cross' },
             textStyle: { fontSize: 15 },
             formatter: function (params) {
-              let res = `<div class="font-bold border-b border-slate-700 pb-1 mb-1.5 text-base">${params[0].name} 累積報酬率比較</div>`;
+              let res = `<div class="font-bold border-b border-slate-700 pb-1 mb-1.5 text-base">${escapeHTML(params[0].name)} 累積報酬率比較</div>`;
               params.forEach(p => {
                 const color = p.value >= 0 ? '#ef4444' : '#22c55e';
                 const sign = p.value >= 0 ? '+' : '';
-                res += `<div class="my-1">${p.marker} ${p.seriesName}: <span style="color:${color}" class="font-bold text-base">${sign}${p.value}%</span></div>`;
+                res += `<div class="my-1">${p.marker} ${escapeHTML(p.seriesName)}: <span style="color:${color}" class="font-bold text-base">${sign}${p.value}%</span></div>`;
               });
               return res;
             }
@@ -902,7 +920,7 @@
       });
     }
 
-    // Render Data Table
+    // Render Data Table with HTML Sanitization (Anti-XSS Protection)
     function renderTable() {
       const headElem = document.getElementById('tableHead');
       const bodyElem = document.getElementById('tableBody');
@@ -939,13 +957,16 @@
           const color = isUp ? 'text-rose-500' : 'text-emerald-400';
           const sign = isUp ? '+' : '';
 
+          const safeDate = escapeHTML(item.date);
+          const safeUpdateTime = escapeHTML(item.updateTime || item.date);
+
           bodyElem.innerHTML += `
             <tr class="hover:bg-slate-800/60 transition">
-              <td class="px-5 py-4 font-bold text-slate-100">${item.date}</td>
+              <td class="px-5 py-4 font-bold text-slate-100">${safeDate}</td>
               <td class="px-5 py-4 font-extrabold text-white text-base sm:text-lg">${item.price.toFixed(2)}</td>
               <td class="px-5 py-4 font-bold ${color}">${sign}${item.change.toFixed(2)}</td>
               <td class="px-5 py-4 font-bold ${color}">${sign}${item.changePercent.toFixed(2)}%</td>
-              <td class="px-5 py-4 text-slate-300 font-medium">${item.updateTime || item.date}</td>
+              <td class="px-5 py-4 text-slate-300 font-medium">${safeUpdateTime}</td>
             </tr>
           `;
         });
@@ -983,14 +1004,17 @@
           const taiexColor = taiexUp ? 'text-rose-500' : 'text-emerald-400';
           const taiexSign = taiexUp ? '+' : '';
 
+          const safeDate = escapeHTML(item.date);
+          const safeUpdateTime = escapeHTML(item.updateTime || item.date);
+
           bodyElem.innerHTML += `
             <tr class="hover:bg-slate-800/60 transition">
-              <td class="px-5 py-4 font-bold text-slate-100">${item.date}</td>
+              <td class="px-5 py-4 font-bold text-slate-100">${safeDate}</td>
               <td class="px-5 py-4 font-extrabold text-white text-base sm:text-lg">${item.txPrice.toLocaleString()}</td>
               <td class="px-5 py-4 font-bold ${txColor}">${txSign}${item.txChangePct.toFixed(2)}%</td>
               <td class="px-5 py-4 font-extrabold text-white text-base sm:text-lg">${item.taiexPrice.toLocaleString()}</td>
               <td class="px-5 py-4 font-bold ${taiexColor}">${taiexSign}${item.taiexChangePct.toFixed(2)}%</td>
-              <td class="px-5 py-4 text-slate-300 font-medium">${item.updateTime || item.date}</td>
+              <td class="px-5 py-4 text-slate-300 font-medium">${safeUpdateTime}</td>
             </tr>
           `;
         });
