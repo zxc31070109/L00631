@@ -2,7 +2,7 @@
 <html lang="zh-TW" class="dark">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   
   <!-- Security Hardening: Strict Content Security Policy (CSP) -->
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://docs.google.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; img-src 'self' data: https:; font-src 'self' https://cdnjs.cloudflare.com; connect-src 'self' https://docs.google.com https://api.allorigins.win; frame-ancestors 'self';">
@@ -48,8 +48,8 @@
       font-size: 16px;
     }
     .custom-scrollbar::-webkit-scrollbar {
-      width: 8px;
-      height: 8px;
+      width: 6px;
+      height: 6px;
     }
     .custom-scrollbar::-webkit-scrollbar-track {
       background: #1e293b;
@@ -61,37 +61,52 @@
     .custom-scrollbar::-webkit-scrollbar-thumb:hover {
       background: #64748b;
     }
+
+    /* Responsive Chart Canvas Container */
+    .chart-container {
+      height: 320px;
+    }
+    @media (min-width: 640px) {
+      .chart-container {
+        height: 420px;
+      }
+    }
+    @media (min-width: 1024px) {
+      .chart-container {
+        height: 520px;
+      }
+    }
   </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen pb-16 antialiased selection:bg-indigo-500 selection:text-white">
 
   <!-- Header Section -->
-  <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-50 py-1">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-      <div class="flex items-center space-x-4">
-        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-indigo-500/25">
-          <i class="fa-solid fa-chart-line text-white text-2xl"></i>
+  <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-50 py-2 sm:py-1">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 min-h-[4rem] sm:h-20 flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-0">
+      <div class="flex items-center space-x-3 sm:space-x-4 w-full sm:w-auto">
+        <div class="w-10 h-10 sm:w-12 sm:h-12 shrink-0 rounded-xl sm:rounded-2xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-indigo-500/25">
+          <i class="fa-solid fa-chart-line text-white text-xl sm:text-2xl"></i>
         </div>
         <div>
-          <h1 class="text-xl sm:text-2xl font-black text-white tracking-wide flex items-center gap-3">
-            台股 00631L & 期貨大盤 趨勢分析
-            <span class="text-xs sm:text-sm font-semibold px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 shadow-sm flex items-center gap-1.5">
-              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <h1 class="text-base sm:text-xl lg:text-2xl font-black text-white tracking-wide flex flex-wrap items-center gap-1.5 sm:gap-3">
+            <span>台股 00631L & 期貨大盤 趨勢分析</span>
+            <span class="text-[10px] sm:text-xs font-semibold px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 shadow-sm flex items-center gap-1">
+              <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-400 animate-pulse"></span>
               ⚡ 毫秒級極速 Parsing (Secured)
             </span>
           </h1>
-          <p class="text-sm text-slate-300 mt-0.5">自動對接 Google Sheet • 工作日去重與專業圖表</p>
+          <p class="text-xs sm:text-sm text-slate-300 mt-0.5">自動對接 Google Sheet • 工作日去重與專業圖表</p>
         </div>
       </div>
 
       <!-- Controls Right -->
-      <div class="flex items-center space-x-3">
-        <div id="statusBadge" class="hidden sm:flex items-center space-x-2 text-sm px-3.5 py-2 rounded-xl bg-slate-800 border border-slate-700 text-slate-200 font-medium">
-          <i class="fa-solid fa-shield-halved text-emerald-400 text-base"></i>
+      <div class="flex items-center justify-end space-x-2 sm:space-x-3 w-full sm:w-auto">
+        <div id="statusBadge" class="flex items-center space-x-1.5 sm:space-x-2 text-xs sm:text-sm px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-xl bg-slate-800 border border-slate-700 text-slate-200 font-medium">
+          <i class="fa-solid fa-shield-halved text-emerald-400 text-xs sm:text-base"></i>
           <span id="statusText">已即時連線</span>
         </div>
-        <button id="refreshBtn" onclick="fetchLiveData(true)" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-bold transition flex items-center space-x-2 shadow-lg shadow-indigo-600/30 active:scale-95">
-          <i class="fa-solid fa-rotate text-sm" id="refreshIcon"></i>
+        <button id="refreshBtn" onclick="fetchLiveData(true)" class="px-3 py-1.5 sm:px-4 sm:py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs sm:text-sm font-bold transition flex items-center space-x-1.5 sm:space-x-2 shadow-lg shadow-indigo-600/30 active:scale-95 shrink-0">
+          <i class="fa-solid fa-rotate text-xs sm:text-sm" id="refreshIcon"></i>
           <span>手動刷新</span>
         </button>
       </div>
@@ -99,81 +114,81 @@
   </header>
 
   <!-- Main Container -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 space-y-8">
+  <main class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-4 sm:pt-6 space-y-6 sm:space-y-8">
 
     <!-- Overview Stats Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5" id="kpiContainer">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5" id="kpiContainer">
       <!-- KPI 1: 00631L 最新收盤價 -->
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl relative overflow-hidden group hover:border-indigo-500/50 transition">
-        <div class="flex justify-between items-start mb-3">
-          <span class="text-sm font-bold text-slate-300 uppercase tracking-wider">00631L 元大台灣50正2</span>
-          <span class="px-2.5 py-1 rounded-lg text-xs font-extrabold bg-indigo-500/20 text-indigo-300 border border-indigo-500/40">最新工作日</span>
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 shadow-2xl relative overflow-hidden group hover:border-indigo-500/50 transition">
+        <div class="flex justify-between items-start mb-2 sm:mb-3">
+          <span class="text-xs sm:text-sm font-bold text-slate-300 uppercase tracking-wider">00631L 元大台灣50正2</span>
+          <span class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg text-[10px] sm:text-xs font-extrabold bg-indigo-500/20 text-indigo-300 border border-indigo-500/40">最新工作日</span>
         </div>
         <div class="flex items-baseline space-x-2 my-1">
-          <span id="kpi00631LPrice" class="text-4xl sm:text-5xl font-black text-white tracking-tight">--.--</span>
-          <span class="text-sm font-semibold text-slate-400">TWD</span>
+          <span id="kpi00631LPrice" class="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight">--.--</span>
+          <span class="text-xs sm:text-sm font-semibold text-slate-400">TWD</span>
         </div>
-        <div class="mt-3 flex items-center text-base font-bold" id="kpi00631LChange">
+        <div class="mt-2 sm:mt-3 flex items-center text-sm sm:text-base font-bold" id="kpi00631LChange">
           <span>--</span>
         </div>
-        <div class="mt-4 pt-3 border-t border-slate-800 flex justify-between text-xs sm:text-sm text-slate-400 font-medium">
+        <div class="mt-3 sm:mt-4 pt-2.5 sm:pt-3 border-t border-slate-800 flex justify-between text-[11px] sm:text-xs lg:text-sm text-slate-400 font-medium">
           <span>最高: <strong id="kpi00631LHigh" class="text-slate-100 font-bold">--</strong></span>
           <span>最低: <strong id="kpi00631LLow" class="text-slate-100 font-bold">--</strong></span>
         </div>
       </div>
 
       <!-- KPI 2: 台指期貨收盤點數 -->
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl relative overflow-hidden group hover:border-cyan-500/50 transition">
-        <div class="flex justify-between items-start mb-3">
-          <span class="text-sm font-bold text-slate-300 uppercase tracking-wider">台指期貨收盤點數</span>
-          <span class="px-2.5 py-1 rounded-lg text-xs font-extrabold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">期貨</span>
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 shadow-2xl relative overflow-hidden group hover:border-cyan-500/50 transition">
+        <div class="flex justify-between items-start mb-2 sm:mb-3">
+          <span class="text-xs sm:text-sm font-bold text-slate-300 uppercase tracking-wider">台指期貨收盤點數</span>
+          <span class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg text-[10px] sm:text-xs font-extrabold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">期貨</span>
         </div>
         <div class="flex items-baseline space-x-2 my-1">
-          <span id="kpiTxPrice" class="text-4xl sm:text-5xl font-black text-white tracking-tight">--</span>
-          <span class="text-sm font-semibold text-slate-400">點</span>
+          <span id="kpiTxPrice" class="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight">--</span>
+          <span class="text-xs sm:text-sm font-semibold text-slate-400">點</span>
         </div>
-        <div class="mt-3 flex items-center text-base font-bold" id="kpiTxChange">
+        <div class="mt-2 sm:mt-3 flex items-center text-sm sm:text-base font-bold" id="kpiTxChange">
           <span>--</span>
         </div>
-        <div class="mt-4 pt-3 border-t border-slate-800 flex justify-between text-xs sm:text-sm text-slate-400 font-medium">
+        <div class="mt-3 sm:mt-4 pt-2.5 sm:pt-3 border-t border-slate-800 flex justify-between text-[11px] sm:text-xs lg:text-sm text-slate-400 font-medium">
           <span>最高: <strong id="kpiTxHigh" class="text-slate-100 font-bold">--</strong></span>
           <span>最低: <strong id="kpiTxLow" class="text-slate-100 font-bold">--</strong></span>
         </div>
       </div>
 
       <!-- KPI 3: 大盤加權指數 -->
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl relative overflow-hidden group hover:border-emerald-500/50 transition">
-        <div class="flex justify-between items-start mb-3">
-          <span class="text-sm font-bold text-slate-300 uppercase tracking-wider">大盤加權指數</span>
-          <span class="px-2.5 py-1 rounded-lg text-xs font-extrabold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">大盤</span>
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 shadow-2xl relative overflow-hidden group hover:border-emerald-500/50 transition">
+        <div class="flex justify-between items-start mb-2 sm:mb-3">
+          <span class="text-xs sm:text-sm font-bold text-slate-300 uppercase tracking-wider">大盤加權指數</span>
+          <span class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg text-[10px] sm:text-xs font-extrabold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">大盤</span>
         </div>
         <div class="flex items-baseline space-x-2 my-1">
-          <span id="kpiTaiexPrice" class="text-4xl sm:text-5xl font-black text-white tracking-tight">--</span>
-          <span class="text-sm font-semibold text-slate-400">點</span>
+          <span id="kpiTaiexPrice" class="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight">--</span>
+          <span class="text-xs sm:text-sm font-semibold text-slate-400">點</span>
         </div>
-        <div class="mt-3 flex items-center text-base font-bold" id="kpiTaiexChange">
+        <div class="mt-2 sm:mt-3 flex items-center text-sm sm:text-base font-bold" id="kpiTaiexChange">
           <span>--</span>
         </div>
-        <div class="mt-4 pt-3 border-t border-slate-800 flex justify-between text-xs sm:text-sm text-slate-400 font-medium">
+        <div class="mt-3 sm:mt-4 pt-2.5 sm:pt-3 border-t border-slate-800 flex justify-between text-[11px] sm:text-xs lg:text-sm text-slate-400 font-medium">
           <span>最高: <strong id="kpiTaiexHigh" class="text-slate-100 font-bold">--</strong></span>
           <span>最低: <strong id="kpiTaiexLow" class="text-slate-100 font-bold">--</strong></span>
         </div>
       </div>
 
       <!-- KPI 4: 統計工作日數量 -->
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl relative overflow-hidden group hover:border-purple-500/50 transition">
-        <div class="flex justify-between items-start mb-3">
-          <span class="text-sm font-bold text-slate-300 uppercase tracking-wider">數據涵蓋期間</span>
-          <span class="px-2.5 py-1 rounded-lg text-xs font-extrabold bg-purple-500/20 text-purple-300 border border-purple-500/40">工作日統計</span>
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 shadow-2xl relative overflow-hidden group hover:border-purple-500/50 transition">
+        <div class="flex justify-between items-start mb-2 sm:mb-3">
+          <span class="text-xs sm:text-sm font-bold text-slate-300 uppercase tracking-wider">數據涵蓋期間</span>
+          <span class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg text-[10px] sm:text-xs font-extrabold bg-purple-500/20 text-purple-300 border border-purple-500/40">工作日統計</span>
         </div>
         <div class="flex items-baseline space-x-2 my-1">
-          <span id="kpiTotalDays" class="text-4xl sm:text-5xl font-black text-white tracking-tight">--</span>
-          <span class="text-sm font-semibold text-slate-400">個工作日</span>
+          <span id="kpiTotalDays" class="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight">--</span>
+          <span class="text-xs sm:text-sm font-semibold text-slate-400">個工作日</span>
         </div>
-        <div class="mt-3 text-xs sm:text-sm text-slate-300 font-medium">
+        <div class="mt-2 sm:mt-3 text-[11px] sm:text-xs lg:text-sm text-slate-300 font-medium">
           最後更新: <span id="kpiLastUpdated" class="text-slate-100 font-bold">--</span>
         </div>
-        <div class="mt-4 pt-3 border-t border-slate-800 flex justify-between text-xs sm:text-sm text-slate-400 font-medium">
+        <div class="mt-3 sm:mt-4 pt-2.5 sm:pt-3 border-t border-slate-800 flex justify-between text-[11px] sm:text-xs lg:text-sm text-slate-400 font-medium">
           <span>起始: <span id="kpiStartDate" class="text-slate-200">--</span></span>
           <span>截止: <span id="kpiEndDate" class="text-slate-200">--</span></span>
         </div>
@@ -181,80 +196,80 @@
     </div>
 
     <!-- Navigation Tabs for Views -->
-    <div class="flex flex-wrap items-center justify-between gap-4 bg-slate-900 p-2 rounded-2xl border border-slate-800">
-      <div class="flex flex-wrap items-center gap-2" id="tabGroup">
-        <button onclick="switchTab('00631L')" id="tabBtn-00631L" class="px-5 py-3 rounded-xl text-sm sm:text-base font-bold transition flex items-center space-x-2 bg-indigo-600 text-white shadow-lg shadow-indigo-600/30">
-          <i class="fa-solid fa-chart-area text-lg"></i>
-          <span>00631L 分頁 (股價趨勢圖)</span>
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4 bg-slate-900 p-2 sm:p-2.5 rounded-2xl border border-slate-800">
+      <div class="grid grid-cols-1 sm:grid-cols-3 md:flex md:flex-wrap items-center gap-1.5 sm:gap-2 w-full md:w-auto" id="tabGroup">
+        <button onclick="switchTab('00631L')" id="tabBtn-00631L" class="px-3.5 py-2.5 sm:px-5 sm:py-3 rounded-xl text-xs sm:text-sm lg:text-base font-bold transition flex items-center justify-center sm:justify-start space-x-2 bg-indigo-600 text-white shadow-lg shadow-indigo-600/30">
+          <i class="fa-solid fa-chart-area text-sm sm:text-lg"></i>
+          <span class="truncate">00631L 股價趨勢圖</span>
         </button>
-        <button onclick="switchTab('market')" id="tabBtn-market" class="px-5 py-3 rounded-xl text-sm sm:text-base font-bold text-slate-300 hover:text-white hover:bg-slate-800 transition flex items-center space-x-2">
-          <i class="fa-solid fa-chart-line text-lg"></i>
-          <span>台指期貨大盤 分頁</span>
+        <button onclick="switchTab('market')" id="tabBtn-market" class="px-3.5 py-2.5 sm:px-5 sm:py-3 rounded-xl text-xs sm:text-sm lg:text-base font-bold text-slate-300 hover:text-white hover:bg-slate-800 transition flex items-center justify-center sm:justify-start space-x-2">
+          <i class="fa-solid fa-chart-line text-sm sm:text-lg"></i>
+          <span class="truncate">台指期貨大盤分頁</span>
         </button>
-        <button onclick="switchTab('combined')" id="tabBtn-combined" class="px-5 py-3 rounded-xl text-sm sm:text-base font-bold text-slate-300 hover:text-white hover:bg-slate-800 transition flex items-center space-x-2">
-          <i class="fa-solid fa-code-compare text-lg"></i>
-          <span>槓桿 vs 大盤 對比分析</span>
+        <button onclick="switchTab('combined')" id="tabBtn-combined" class="px-3.5 py-2.5 sm:px-5 sm:py-3 rounded-xl text-xs sm:text-sm lg:text-base font-bold text-slate-300 hover:text-white hover:bg-slate-800 transition flex items-center justify-center sm:justify-start space-x-2">
+          <i class="fa-solid fa-code-compare text-sm sm:text-lg"></i>
+          <span class="truncate">槓桿 vs 大盤對比</span>
         </button>
       </div>
 
       <!-- Quick Chart Controls -->
-      <div class="flex items-center space-x-3 px-3 text-sm font-semibold text-slate-300">
+      <div class="flex items-center justify-between sm:justify-start space-x-3 px-2 sm:px-3 text-xs sm:text-sm font-semibold text-slate-300">
         <span>顯示指標:</span>
-        <label class="inline-flex items-center cursor-pointer space-x-2 bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700">
-          <input type="checkbox" id="toggleMA" checked onchange="updateCurrentChart()" class="w-4 h-4 rounded bg-slate-900 border-slate-700 text-indigo-600 focus:ring-0">
+        <label class="inline-flex items-center cursor-pointer space-x-2 bg-slate-800/80 px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg border border-slate-700">
+          <input type="checkbox" id="toggleMA" checked onchange="updateCurrentChart()" class="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded bg-slate-900 border-slate-700 text-indigo-600 focus:ring-0">
           <span class="text-slate-200">移動平均 (MA5 / MA20)</span>
         </label>
       </div>
     </div>
 
     <!-- Chart Container Section -->
-    <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl relative">
-      <div class="flex flex-col md:flex-row md:items-center justify-between pb-5 mb-5 border-b border-slate-800 gap-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 shadow-2xl relative">
+      <div class="flex flex-col md:flex-row md:items-center justify-between pb-4 sm:pb-5 mb-4 sm:mb-5 border-b border-slate-800 gap-3 sm:gap-4">
         <div>
-          <h2 id="chartTitle" class="text-lg sm:text-2xl font-black text-white flex items-center gap-3">
-            <span class="w-3.5 h-3.5 rounded-full bg-indigo-500"></span>
+          <h2 id="chartTitle" class="text-base sm:text-xl lg:text-2xl font-black text-white flex items-center gap-2 sm:gap-3">
+            <span class="w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full bg-indigo-500 shrink-0"></span>
             00631L 每日收盤價專業趨勢圖
           </h2>
-          <p id="chartSubtitle" class="text-sm text-slate-300 mt-1">X軸為各工作日日期，Y軸為收盤點數 / 價格，可自由滾動與切換範圍</p>
+          <p id="chartSubtitle" class="text-xs sm:text-sm text-slate-300 mt-1">X軸為各工作日日期，Y軸為收盤點數 / 價格，可自由滾動與切換範圍</p>
         </div>
 
-        <div class="flex items-center space-x-2">
-          <button onclick="setChartRange('all')" class="px-4 py-2 text-sm rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold border border-slate-700 transition">全部工作日</button>
-          <button onclick="setChartRange('1m')" class="px-4 py-2 text-sm rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold border border-slate-700 transition">近 1 個月</button>
-          <button onclick="setChartRange('14d')" class="px-4 py-2 text-sm rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold border border-slate-700 transition">近 14 日</button>
+        <div class="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
+          <button onclick="setChartRange('all')" class="px-2.5 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm rounded-lg sm:rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold border border-slate-700 transition">全部工作日</button>
+          <button onclick="setChartRange('1m')" class="px-2.5 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm rounded-lg sm:rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold border border-slate-700 transition">近 1 個月</button>
+          <button onclick="setChartRange('14d')" class="px-2.5 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm rounded-lg sm:rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold border border-slate-700 transition">近 14 日</button>
         </div>
       </div>
 
       <!-- Main Chart Canvas Container -->
-      <div id="mainChart" class="w-full h-[520px]"></div>
+      <div id="mainChart" class="w-full chart-container h-[320px] sm:h-[420px] lg:h-[520px]"></div>
     </div>
 
     <!-- Data Table Section -->
-    <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-5">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 shadow-2xl space-y-4 sm:space-y-5">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
         <div>
-          <h3 id="tableTitle" class="text-base sm:text-xl font-black text-white flex items-center gap-3">
-            <i class="fa-solid fa-table text-indigo-400 text-xl"></i>
+          <h3 id="tableTitle" class="text-sm sm:text-lg lg:text-xl font-black text-white flex items-center gap-2 sm:gap-3">
+            <i class="fa-solid fa-table text-indigo-400 text-base sm:text-xl"></i>
             工作日歷史明細數據 (已自動去除當日重複更新)
           </h3>
-          <p class="text-sm text-slate-300 mt-1">僅保留每個工作日最後更新的權威資料</p>
+          <p class="text-xs sm:text-sm text-slate-300 mt-0.5 sm:mt-1">僅保留每個工作日最後更新的權威資料</p>
         </div>
 
-        <div class="flex items-center space-x-3">
-          <div class="relative">
-            <input type="text" id="searchInput" oninput="renderTable()" placeholder="搜尋日期 (例如 2026/08)..." class="bg-slate-800 border border-slate-700 text-sm rounded-xl pl-10 pr-4 py-2.5 text-slate-100 focus:outline-none focus:border-indigo-500 w-60 font-medium">
-            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400 text-sm"></i>
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:space-x-3">
+          <div class="relative w-full sm:w-auto">
+            <input type="text" id="searchInput" oninput="renderTable()" placeholder="搜尋日期 (如 2026/08)..." class="w-full sm:w-60 bg-slate-800 border border-slate-700 text-xs sm:text-sm rounded-xl pl-9 pr-3 py-2 sm:pl-10 sm:pr-4 sm:py-2.5 text-slate-100 focus:outline-none focus:border-indigo-500 font-medium">
+            <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 sm:left-3.5 sm:top-3.5 text-slate-400 text-xs sm:text-sm"></i>
           </div>
-          <button onclick="exportCurrentTableCSV()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-sm font-bold text-slate-100 flex items-center space-x-2 transition shadow-md">
-            <i class="fa-solid fa-download text-sm text-indigo-400"></i>
+          <button onclick="exportCurrentTableCSV()" class="px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs sm:text-sm font-bold text-slate-100 flex items-center justify-center space-x-2 transition shadow-md shrink-0">
+            <i class="fa-solid fa-download text-xs sm:text-sm text-indigo-400"></i>
             <span>下載 CSV</span>
           </button>
         </div>
       </div>
 
       <!-- Table Scrollable -->
-      <div class="overflow-x-auto custom-scrollbar border border-slate-800 rounded-2xl">
-        <table class="w-full text-left text-sm sm:text-base">
+      <div class="overflow-x-auto custom-scrollbar border border-slate-800 rounded-xl sm:rounded-2xl">
+        <table class="w-full text-left text-xs sm:text-sm lg:text-base">
           <thead id="tableHead" class="bg-slate-800/90 text-slate-200 font-bold border-b border-slate-700 uppercase tracking-wider">
             <!-- Dynamic Headers -->
           </thead>
@@ -374,9 +389,15 @@
       // 2. Secured JSONP Async Background Fetch (~100ms)
       fetchLiveData(false);
 
-      window.addEventListener('resize', () => {
-        if (chartInstance) chartInstance.resize();
-      });
+      const handleResize = () => {
+        if (chartInstance) {
+          chartInstance.resize();
+          updateCurrentChart();
+        }
+      };
+
+      window.addEventListener('resize', handleResize);
+      window.addEventListener('orientationchange', handleResize);
     });
 
     // High-Speed Secured JSONP Fetcher
@@ -548,8 +569,8 @@
         const colorClass = isUp ? 'text-rose-500' : 'text-emerald-400';
         const icon = isUp ? 'fa-caret-up' : 'fa-caret-down';
         const sign = isUp ? '+' : '';
-        chgElem.className = `mt-3 flex items-center text-base font-bold ${colorClass}`;
-        chgElem.innerHTML = `<i class="fa-solid ${icon} mr-1.5 text-lg"></i> ${sign}${latest.change.toFixed(2)} (${sign}${latest.changePercent.toFixed(2)}%)`;
+        chgElem.className = `mt-2 sm:mt-3 flex items-center text-sm sm:text-base font-bold ${colorClass}`;
+        chgElem.innerHTML = `<i class="fa-solid ${icon} mr-1.5 text-base sm:text-lg"></i> ${sign}${latest.change.toFixed(2)} (${sign}${latest.changePercent.toFixed(2)}%)`;
 
         const prices = data00631.map(d => d.price);
         document.getElementById('kpi00631LHigh').textContent = Math.max(...prices).toFixed(2);
@@ -569,8 +590,8 @@
         const txColor = txIsUp ? 'text-rose-500' : 'text-emerald-400';
         const txIcon = txIsUp ? 'fa-caret-up' : 'fa-caret-down';
         const txSign = txIsUp ? '+' : '';
-        document.getElementById('kpiTxChange').className = `mt-3 flex items-center text-base font-bold ${txColor}`;
-        document.getElementById('kpiTxChange').innerHTML = `<i class="fa-solid ${txIcon} mr-1.5 text-lg"></i> ${txSign}${latestM.txChangePct.toFixed(2)}%`;
+        document.getElementById('kpiTxChange').className = `mt-2 sm:mt-3 flex items-center text-sm sm:text-base font-bold ${txColor}`;
+        document.getElementById('kpiTxChange').innerHTML = `<i class="fa-solid ${txIcon} mr-1.5 text-base sm:text-lg"></i> ${txSign}${latestM.txChangePct.toFixed(2)}%`;
 
         const txPrices = dataMarket.map(d => d.txPrice);
         document.getElementById('kpiTxHigh').textContent = Math.max(...txPrices).toLocaleString();
@@ -581,8 +602,8 @@
         const taiexColor = taiexIsUp ? 'text-rose-500' : 'text-emerald-400';
         const taiexIcon = taiexIsUp ? 'fa-caret-up' : 'fa-caret-down';
         const taiexSign = taiexIsUp ? '+' : '';
-        document.getElementById('kpiTaiexChange').className = `mt-3 flex items-center text-base font-bold ${taiexColor}`;
-        document.getElementById('kpiTaiexChange').innerHTML = `<i class="fa-solid ${taiexIcon} mr-1.5 text-lg"></i> ${taiexSign}${latestM.taiexChangePct.toFixed(2)}%`;
+        document.getElementById('kpiTaiexChange').className = `mt-2 sm:mt-3 flex items-center text-sm sm:text-base font-bold ${taiexColor}`;
+        document.getElementById('kpiTaiexChange').innerHTML = `<i class="fa-solid ${taiexIcon} mr-1.5 text-base sm:text-lg"></i> ${taiexSign}${latestM.taiexChangePct.toFixed(2)}%`;
 
         const taiexPrices = dataMarket.map(d => d.taiexPrice);
         document.getElementById('kpiTaiexHigh').textContent = Math.max(...taiexPrices).toLocaleString();
@@ -620,9 +641,9 @@
       ['00631L', 'market', 'combined'].forEach(t => {
         const btn = document.getElementById(`tabBtn-${t}`);
         if (t === tabName) {
-          btn.className = 'px-5 py-3 rounded-xl text-sm sm:text-base font-bold transition flex items-center space-x-2 bg-indigo-600 text-white shadow-lg shadow-indigo-600/30';
+          btn.className = 'px-3.5 py-2.5 sm:px-5 sm:py-3 rounded-xl text-xs sm:text-sm lg:text-base font-bold transition flex items-center justify-center sm:justify-start space-x-2 bg-indigo-600 text-white shadow-lg shadow-indigo-600/30';
         } else {
-          btn.className = 'px-5 py-3 rounded-xl text-sm sm:text-base font-bold text-slate-300 hover:text-white hover:bg-slate-800 transition flex items-center space-x-2';
+          btn.className = 'px-3.5 py-2.5 sm:px-5 sm:py-3 rounded-xl text-xs sm:text-sm lg:text-base font-bold text-slate-300 hover:text-white hover:bg-slate-800 transition flex items-center justify-center sm:justify-start space-x-2';
         }
       });
 
@@ -636,9 +657,11 @@
       chartInstance.clear();
 
       const showMA = document.getElementById('toggleMA').checked;
+      const isMobile = window.innerWidth < 768;
+      const isSmallMobile = window.innerWidth < 480;
 
       if (activeTab === '00631L') {
-        document.getElementById('chartTitle').innerHTML = '<span class="w-3.5 h-3.5 rounded-full bg-indigo-500"></span> 00631L 元大台灣50正2 工作日收盤價趨勢';
+        document.getElementById('chartTitle').innerHTML = '<span class="w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full bg-indigo-500 shrink-0"></span> 00631L 元大台灣50正2 工作日收盤價趨勢';
         document.getElementById('chartSubtitle').textContent = '包含每日收盤價折線、最高/最低點標籤與移動平均線 (MA5, MA20)';
 
         const list = processedData["00631L"];
@@ -652,8 +675,8 @@
             data: prices,
             smooth: true,
             symbol: 'circle',
-            symbolSize: 8,
-            lineStyle: { width: 4, color: '#6366f1' },
+            symbolSize: isMobile ? 6 : 8,
+            lineStyle: { width: isMobile ? 2.5 : 4, color: '#6366f1' },
             itemStyle: { color: '#6366f1' },
             areaStyle: {
               color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
@@ -662,7 +685,7 @@
               ])
             },
             markPoint: {
-              label: { fontSize: 13, fontWeight: 'bold' },
+              label: { fontSize: isMobile ? 11 : 13, fontWeight: 'bold' },
               data: [
                 { type: 'max', name: '最高' },
                 { type: 'min', name: '最低' }
@@ -677,7 +700,7 @@
             type: 'line',
             data: calculateMA(5, prices),
             smooth: true,
-            lineStyle: { width: 2, color: '#f59e0b', type: 'dashed' },
+            lineStyle: { width: isMobile ? 1.5 : 2, color: '#f59e0b', type: 'dashed' },
             symbol: 'none'
           });
           seriesList.push({
@@ -685,7 +708,7 @@
             type: 'line',
             data: calculateMA(20, prices),
             smooth: true,
-            lineStyle: { width: 2, color: '#ec4899', type: 'dashed' },
+            lineStyle: { width: isMobile ? 1.5 : 2, color: '#ec4899', type: 'dashed' },
             symbol: 'none'
           });
         }
@@ -695,19 +718,20 @@
           tooltip: {
             trigger: 'axis',
             axisPointer: { type: 'cross' },
-            textStyle: { fontSize: 15 },
+            textStyle: { fontSize: isMobile ? 12 : 15 },
+            extraCssText: 'max-width: 280px; whitespace: normal;',
             formatter: function (params) {
-              let res = `<div class="font-bold border-b border-slate-700 pb-1 mb-1.5 text-base">${escapeHTML(params[0].name)} (工作日)</div>`;
+              let res = `<div class="font-bold border-b border-slate-700 pb-1 mb-1.5 text-xs sm:text-base">${escapeHTML(params[0].name)} (工作日)</div>`;
               const itemData = list[params[0].dataIndex];
               if (itemData) {
                 const color = itemData.change >= 0 ? '#ef4444' : '#22c55e';
                 const sign = itemData.change >= 0 ? '+' : '';
-                res += `<div class="my-1">收盤價: <strong class="text-white text-lg">${itemData.price.toFixed(2)}</strong> 元</div>`;
-                res += `<div class="my-1">漲跌幅: <span style="color:${color}" class="font-bold text-base">${sign}${itemData.change.toFixed(2)} (${sign}${itemData.changePercent.toFixed(2)}%)</span></div>`;
+                res += `<div class="my-1 text-xs sm:text-base">收盤價: <strong class="text-white text-sm sm:text-lg">${itemData.price.toFixed(2)}</strong> 元</div>`;
+                res += `<div class="my-1 text-xs sm:text-base">漲跌幅: <span style="color:${color}" class="font-bold text-xs sm:text-base">${sign}${itemData.change.toFixed(2)} (${sign}${itemData.changePercent.toFixed(2)}%)</span></div>`;
               }
               params.forEach(p => {
                 if (p.seriesName.includes('MA')) {
-                  res += `<div class="text-sm text-slate-300 mt-1">${escapeHTML(p.seriesName)}: ${p.value}</div>`;
+                  res += `<div class="text-xs sm:text-sm text-slate-300 mt-1">${escapeHTML(p.seriesName)}: ${p.value}</div>`;
                 }
               });
               return res;
@@ -715,26 +739,38 @@
           },
           legend: {
             data: seriesList.map(s => s.name),
-            textStyle: { color: '#cbd5e1', fontSize: 14, fontWeight: 'bold' },
-            top: 0
+            textStyle: { color: '#cbd5e1', fontSize: isMobile ? 11 : 14, fontWeight: 'bold' },
+            top: 0,
+            itemGap: isMobile ? 8 : 15
           },
-          grid: { left: '3%', right: '4%', bottom: '15%', containLabel: true },
+          grid: { 
+            left: isMobile ? '3%' : '3%', 
+            right: isMobile ? '3%' : '4%', 
+            bottom: isMobile ? '20%' : '15%', 
+            top: isMobile ? '16%' : '12%',
+            containLabel: true 
+          },
           xAxis: {
             type: 'category',
             data: dates,
             axisLine: { lineStyle: { color: '#475569', width: 2 } },
-            axisLabel: { color: '#cbd5e1', fontSize: 13, fontWeight: 'bold' }
+            axisLabel: { 
+              color: '#cbd5e1', 
+              fontSize: isMobile ? 10 : 13, 
+              fontWeight: 'bold',
+              rotate: isSmallMobile ? 30 : 0
+            }
           },
           yAxis: {
             type: 'value',
             scale: true,
             axisLine: { lineStyle: { color: '#475569', width: 2 } },
-            axisLabel: { color: '#cbd5e1', fontSize: 13, fontWeight: 'bold' },
+            axisLabel: { color: '#cbd5e1', fontSize: isMobile ? 10 : 13, fontWeight: 'bold' },
             splitLine: { lineStyle: { color: '#1e293b' } }
           },
           dataZoom: [
             { type: 'inside', start: 0, end: 100 },
-            { type: 'slider', bottom: '2%', height: 24, borderColor: '#334155', textStyle: { color: '#cbd5e1', fontSize: 12 } }
+            { type: 'slider', bottom: '1%', height: isMobile ? 18 : 24, borderColor: '#334155', textStyle: { color: '#cbd5e1', fontSize: isMobile ? 10 : 12 } }
           ],
           series: seriesList
         };
@@ -742,7 +778,7 @@
         chartInstance.setOption(option);
 
       } else if (activeTab === 'market') {
-        document.getElementById('chartTitle').innerHTML = '<span class="w-3.5 h-3.5 rounded-full bg-cyan-400"></span> 台指期貨點數 vs. 大盤加權指數 對比趨勢';
+        document.getElementById('chartTitle').innerHTML = '<span class="w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full bg-cyan-400 shrink-0"></span> 台指期貨點數 vs. 大盤加權指數 對比趨勢';
         document.getElementById('chartSubtitle').textContent = '雙 Y 軸同時對比顯示期貨與大盤指數之每日點數';
 
         const list = processedData["market"];
@@ -755,43 +791,56 @@
           tooltip: {
             trigger: 'axis',
             axisPointer: { type: 'cross' },
-            textStyle: { fontSize: 15 }
+            textStyle: { fontSize: isMobile ? 12 : 15 },
+            extraCssText: 'max-width: 280px; whitespace: normal;'
           },
           legend: {
             data: ['台指期貨收盤點數', '大盤加權指數'],
-            textStyle: { color: '#cbd5e1', fontSize: 14, fontWeight: 'bold' },
-            top: 0
+            textStyle: { color: '#cbd5e1', fontSize: isMobile ? 11 : 14, fontWeight: 'bold' },
+            top: 0,
+            itemGap: isMobile ? 8 : 15
           },
-          grid: { left: '3%', right: '4%', bottom: '15%', containLabel: true },
+          grid: { 
+            left: isMobile ? '3%' : '3%', 
+            right: isMobile ? '3%' : '4%', 
+            bottom: isMobile ? '20%' : '15%', 
+            top: isMobile ? '18%' : '12%',
+            containLabel: true 
+          },
           xAxis: {
             type: 'category',
             data: dates,
             axisLine: { lineStyle: { color: '#475569', width: 2 } },
-            axisLabel: { color: '#cbd5e1', fontSize: 13, fontWeight: 'bold' }
+            axisLabel: { 
+              color: '#cbd5e1', 
+              fontSize: isMobile ? 10 : 13, 
+              fontWeight: 'bold',
+              rotate: isSmallMobile ? 30 : 0
+            }
           },
           yAxis: [
             {
               type: 'value',
-              name: '台指期貨 (點)',
+              name: isMobile ? '期貨' : '台指期貨 (點)',
               scale: true,
-              nameTextStyle: { fontSize: 13, fontWeight: 'bold', color: '#38bdf8' },
+              nameTextStyle: { fontSize: isMobile ? 10 : 13, fontWeight: 'bold', color: '#38bdf8' },
               axisLine: { lineStyle: { color: '#38bdf8', width: 2 } },
-              axisLabel: { color: '#38bdf8', fontSize: 13, fontWeight: 'bold' },
+              axisLabel: { color: '#38bdf8', fontSize: isMobile ? 10 : 13, fontWeight: 'bold' },
               splitLine: { lineStyle: { color: '#1e293b' } }
             },
             {
               type: 'value',
-              name: '加權指數 (點)',
+              name: isMobile ? '大盤' : '加權指數 (點)',
               scale: true,
-              nameTextStyle: { fontSize: 13, fontWeight: 'bold', color: '#10b981' },
+              nameTextStyle: { fontSize: isMobile ? 10 : 13, fontWeight: 'bold', color: '#10b981' },
               axisLine: { lineStyle: { color: '#10b981', width: 2 } },
-              axisLabel: { color: '#10b981', fontSize: 13, fontWeight: 'bold' },
+              axisLabel: { color: '#10b981', fontSize: isMobile ? 10 : 13, fontWeight: 'bold' },
               splitLine: { show: false }
             }
           ],
           dataZoom: [
             { type: 'inside', start: 0, end: 100 },
-            { type: 'slider', bottom: '2%', height: 24, borderColor: '#334155', textStyle: { color: '#cbd5e1', fontSize: 12 } }
+            { type: 'slider', bottom: '1%', height: isMobile ? 18 : 24, borderColor: '#334155', textStyle: { color: '#cbd5e1', fontSize: isMobile ? 10 : 12 } }
           ],
           series: [
             {
@@ -800,7 +849,7 @@
               data: txPrices,
               smooth: true,
               yAxisIndex: 0,
-              lineStyle: { width: 3.5, color: '#38bdf8' },
+              lineStyle: { width: isMobile ? 2.5 : 3.5, color: '#38bdf8' },
               itemStyle: { color: '#38bdf8' }
             },
             {
@@ -809,7 +858,7 @@
               data: taiexPrices,
               smooth: true,
               yAxisIndex: 1,
-              lineStyle: { width: 3.5, color: '#10b981' },
+              lineStyle: { width: isMobile ? 2.5 : 3.5, color: '#10b981' },
               itemStyle: { color: '#10b981' }
             }
           ]
@@ -818,7 +867,7 @@
         chartInstance.setOption(option);
 
       } else if (activeTab === 'combined') {
-        document.getElementById('chartTitle').innerHTML = '<span class="w-3.5 h-3.5 rounded-full bg-purple-400"></span> 00631L 槓桿回報率 vs. 大盤指數 累積漲跌幅比較';
+        document.getElementById('chartTitle').innerHTML = '<span class="w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full bg-purple-400 shrink-0"></span> 00631L 槓桿回報率 vs. 大盤指數 累積漲跌幅比較';
         document.getElementById('chartSubtitle').textContent = '歸一化百分比 (%) 同框比較正 2 槓桿 ETF 與大盤走勢放大效應';
 
         const list00631 = processedData["00631L"];
@@ -843,40 +892,53 @@
           tooltip: {
             trigger: 'axis',
             axisPointer: { type: 'cross' },
-            textStyle: { fontSize: 15 },
+            textStyle: { fontSize: isMobile ? 12 : 15 },
+            extraCssText: 'max-width: 280px; whitespace: normal;',
             formatter: function (params) {
-              let res = `<div class="font-bold border-b border-slate-700 pb-1 mb-1.5 text-base">${escapeHTML(params[0].name)} 累積報酬率比較</div>`;
+              let res = `<div class="font-bold border-b border-slate-700 pb-1 mb-1.5 text-xs sm:text-base">${escapeHTML(params[0].name)} 累積報酬率比較</div>`;
               params.forEach(p => {
                 const color = p.value >= 0 ? '#ef4444' : '#22c55e';
                 const sign = p.value >= 0 ? '+' : '';
-                res += `<div class="my-1">${p.marker} ${escapeHTML(p.seriesName)}: <span style="color:${color}" class="font-bold text-base">${sign}${p.value}%</span></div>`;
+                res += `<div class="my-1 text-xs sm:text-base">${p.marker} ${escapeHTML(p.seriesName)}: <span style="color:${color}" class="font-bold text-xs sm:text-base">${sign}${p.value}%</span></div>`;
               });
               return res;
             }
           },
           legend: {
             data: ['00631L 累積報酬率 (%)', '大盤指數 累積報酬率 (%)'],
-            textStyle: { color: '#cbd5e1', fontSize: 14, fontWeight: 'bold' },
-            top: 0
+            textStyle: { color: '#cbd5e1', fontSize: isMobile ? 11 : 14, fontWeight: 'bold' },
+            top: 0,
+            itemGap: isMobile ? 8 : 15
           },
-          grid: { left: '3%', right: '4%', bottom: '15%', containLabel: true },
+          grid: { 
+            left: isMobile ? '3%' : '3%', 
+            right: isMobile ? '3%' : '4%', 
+            bottom: isMobile ? '20%' : '15%', 
+            top: isMobile ? '16%' : '12%',
+            containLabel: true 
+          },
           xAxis: {
             type: 'category',
             data: dates,
             axisLine: { lineStyle: { color: '#475569', width: 2 } },
-            axisLabel: { color: '#cbd5e1', fontSize: 13, fontWeight: 'bold' }
+            axisLabel: { 
+              color: '#cbd5e1', 
+              fontSize: isMobile ? 10 : 13, 
+              fontWeight: 'bold',
+              rotate: isSmallMobile ? 30 : 0
+            }
           },
           yAxis: {
             type: 'value',
-            name: '變動百分比 (%)',
-            nameTextStyle: { fontSize: 13, fontWeight: 'bold', color: '#cbd5e1' },
+            name: isMobile ? '變動 (%)' : '變動百分比 (%)',
+            nameTextStyle: { fontSize: isMobile ? 10 : 13, fontWeight: 'bold', color: '#cbd5e1' },
             axisLine: { lineStyle: { color: '#475569', width: 2 } },
-            axisLabel: { color: '#cbd5e1', fontSize: 13, fontWeight: 'bold', formatter: '{value} %' },
+            axisLabel: { color: '#cbd5e1', fontSize: isMobile ? 10 : 13, fontWeight: 'bold', formatter: '{value} %' },
             splitLine: { lineStyle: { color: '#1e293b' } }
           },
           dataZoom: [
             { type: 'inside', start: 0, end: 100 },
-            { type: 'slider', bottom: '2%', height: 24, borderColor: '#334155', textStyle: { color: '#cbd5e1', fontSize: 12 } }
+            { type: 'slider', bottom: '1%', height: isMobile ? 18 : 24, borderColor: '#334155', textStyle: { color: '#cbd5e1', fontSize: isMobile ? 10 : 12 } }
           ],
           series: [
             {
@@ -884,7 +946,7 @@
               type: 'line',
               data: return00631,
               smooth: true,
-              lineStyle: { width: 4, color: '#818cf8' },
+              lineStyle: { width: isMobile ? 2.5 : 4, color: '#818cf8' },
               itemStyle: { color: '#818cf8' }
             },
             {
@@ -892,7 +954,7 @@
               type: 'line',
               data: returnTaiex,
               smooth: true,
-              lineStyle: { width: 3, color: '#34d399', type: 'dashed' },
+              lineStyle: { width: isMobile ? 2 : 3, color: '#34d399', type: 'dashed' },
               itemStyle: { color: '#34d399' }
             }
           ]
@@ -931,15 +993,15 @@
       bodyElem.innerHTML = '';
 
       if (activeTab === '00631L') {
-        document.getElementById('tableTitle').innerHTML = '<i class="fa-solid fa-table text-indigo-400 text-xl"></i> 00631L 工作日收盤價明細表';
+        document.getElementById('tableTitle').innerHTML = '<i class="fa-solid fa-table text-indigo-400 text-base sm:text-xl"></i> 00631L 工作日收盤價明細表';
 
         headElem.innerHTML = `
           <tr>
-            <th class="px-5 py-4 text-sm sm:text-base">工作日日期</th>
-            <th class="px-5 py-4 text-sm sm:text-base">00631L 收盤價 (TWD)</th>
-            <th class="px-5 py-4 text-sm sm:text-base">單日漲跌 (元)</th>
-            <th class="px-5 py-4 text-sm sm:text-base">單日漲跌幅 (%)</th>
-            <th class="px-5 py-4 text-sm sm:text-base">資料更新時間</th>
+            <th class="px-3 sm:px-5 py-2.5 sm:py-4 text-xs sm:text-sm lg:text-base">工作日日期</th>
+            <th class="px-3 sm:px-5 py-2.5 sm:py-4 text-xs sm:text-sm lg:text-base">00631L 收盤價 (TWD)</th>
+            <th class="px-3 sm:px-5 py-2.5 sm:py-4 text-xs sm:text-sm lg:text-base">單日漲跌 (元)</th>
+            <th class="px-3 sm:px-5 py-2.5 sm:py-4 text-xs sm:text-sm lg:text-base">單日漲跌幅 (%)</th>
+            <th class="px-3 sm:px-5 py-2.5 sm:py-4 text-xs sm:text-sm lg:text-base">資料更新時間</th>
           </tr>
         `;
 
@@ -949,7 +1011,7 @@
         }
 
         if (list.length === 0) {
-          bodyElem.innerHTML = `<tr><td colspan="5" class="px-5 py-8 text-center text-slate-400 text-base">無符合條件之資料</td></tr>`;
+          bodyElem.innerHTML = `<tr><td colspan="5" class="px-3 sm:px-5 py-6 sm:py-8 text-center text-slate-400 text-xs sm:text-base">無符合條件之資料</td></tr>`;
           return;
         }
 
@@ -963,26 +1025,26 @@
 
           bodyElem.innerHTML += `
             <tr class="hover:bg-slate-800/60 transition">
-              <td class="px-5 py-4 font-bold text-slate-100">${safeDate}</td>
-              <td class="px-5 py-4 font-extrabold text-white text-base sm:text-lg">${item.price.toFixed(2)}</td>
-              <td class="px-5 py-4 font-bold ${color}">${sign}${item.change.toFixed(2)}</td>
-              <td class="px-5 py-4 font-bold ${color}">${sign}${item.changePercent.toFixed(2)}%</td>
-              <td class="px-5 py-4 text-slate-300 font-medium">${safeUpdateTime}</td>
+              <td class="px-3 sm:px-5 py-2.5 sm:py-4 font-bold text-slate-100">${safeDate}</td>
+              <td class="px-3 sm:px-5 py-2.5 sm:py-4 font-extrabold text-white text-xs sm:text-base lg:text-lg">${item.price.toFixed(2)}</td>
+              <td class="px-3 sm:px-5 py-2.5 sm:py-4 font-bold ${color}">${sign}${item.change.toFixed(2)}</td>
+              <td class="px-3 sm:px-5 py-2.5 sm:py-4 font-bold ${color}">${sign}${item.changePercent.toFixed(2)}%</td>
+              <td class="px-3 sm:px-5 py-2.5 sm:py-4 text-slate-300 font-medium">${safeUpdateTime}</td>
             </tr>
           `;
         });
 
       } else {
-        document.getElementById('tableTitle').innerHTML = '<i class="fa-solid fa-table text-cyan-400 text-xl"></i> 台指期貨與大盤指數 明細表';
+        document.getElementById('tableTitle').innerHTML = '<i class="fa-solid fa-table text-cyan-400 text-base sm:text-xl"></i> 台指期貨與大盤指數 明細表';
 
         headElem.innerHTML = `
           <tr>
-            <th class="px-5 py-4 text-sm sm:text-base">工作日日期</th>
-            <th class="px-5 py-4 text-sm sm:text-base">台指期貨收盤 (點)</th>
-            <th class="px-5 py-4 text-sm sm:text-base">期貨漲跌幅 (%)</th>
-            <th class="px-5 py-4 text-sm sm:text-base">大盤加權指數 (點)</th>
-            <th class="px-5 py-4 text-sm sm:text-base">大盤漲跌幅 (%)</th>
-            <th class="px-5 py-4 text-sm sm:text-base">資料更新時間</th>
+            <th class="px-3 sm:px-5 py-2.5 sm:py-4 text-xs sm:text-sm lg:text-base">工作日日期</th>
+            <th class="px-3 sm:px-5 py-2.5 sm:py-4 text-xs sm:text-sm lg:text-base">台指期貨收盤 (點)</th>
+            <th class="px-3 sm:px-5 py-2.5 sm:py-4 text-xs sm:text-sm lg:text-base">期貨漲跌幅 (%)</th>
+            <th class="px-3 sm:px-5 py-2.5 sm:py-4 text-xs sm:text-sm lg:text-base">大盤加權指數 (點)</th>
+            <th class="px-3 sm:px-5 py-2.5 sm:py-4 text-xs sm:text-sm lg:text-base">大盤漲跌幅 (%)</th>
+            <th class="px-3 sm:px-5 py-2.5 sm:py-4 text-xs sm:text-sm lg:text-base">資料更新時間</th>
           </tr>
         `;
 
@@ -992,7 +1054,7 @@
         }
 
         if (list.length === 0) {
-          bodyElem.innerHTML = `<tr><td colspan="6" class="px-5 py-8 text-center text-slate-400 text-base">無符合條件之資料</td></tr>`;
+          bodyElem.innerHTML = `<tr><td colspan="6" class="px-3 sm:px-5 py-6 sm:py-8 text-center text-slate-400 text-xs sm:text-base">無符合條件之資料</td></tr>`;
           return;
         }
 
@@ -1010,12 +1072,12 @@
 
           bodyElem.innerHTML += `
             <tr class="hover:bg-slate-800/60 transition">
-              <td class="px-5 py-4 font-bold text-slate-100">${safeDate}</td>
-              <td class="px-5 py-4 font-extrabold text-white text-base sm:text-lg">${item.txPrice.toLocaleString()}</td>
-              <td class="px-5 py-4 font-bold ${txColor}">${txSign}${item.txChangePct.toFixed(2)}%</td>
-              <td class="px-5 py-4 font-extrabold text-white text-base sm:text-lg">${item.taiexPrice.toLocaleString()}</td>
-              <td class="px-5 py-4 font-bold ${taiexColor}">${taiexSign}${item.taiexChangePct.toFixed(2)}%</td>
-              <td class="px-5 py-4 text-slate-300 font-medium">${safeUpdateTime}</td>
+              <td class="px-3 sm:px-5 py-2.5 sm:py-4 font-bold text-slate-100">${safeDate}</td>
+              <td class="px-3 sm:px-5 py-2.5 sm:py-4 font-extrabold text-white text-xs sm:text-base lg:text-lg">${item.txPrice.toLocaleString()}</td>
+              <td class="px-3 sm:px-5 py-2.5 sm:py-4 font-bold ${txColor}">${txSign}${item.txChangePct.toFixed(2)}%</td>
+              <td class="px-3 sm:px-5 py-2.5 sm:py-4 font-extrabold text-white text-xs sm:text-base lg:text-lg">${item.taiexPrice.toLocaleString()}</td>
+              <td class="px-3 sm:px-5 py-2.5 sm:py-4 font-bold ${taiexColor}">${taiexSign}${item.taiexChangePct.toFixed(2)}%</td>
+              <td class="px-3 sm:px-5 py-2.5 sm:py-4 text-slate-300 font-medium">${safeUpdateTime}</td>
             </tr>
           `;
         });
