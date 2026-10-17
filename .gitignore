@@ -1,5 +1,8 @@
 # Local Batch Scripts & Private Utilities (Not pushed to GitHub)
 *.bat
+push.sh
+upload.sh
+push.ps1
 一鍵啟動.html
 
 # Local Data & Logs
