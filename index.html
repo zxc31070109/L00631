@@ -117,7 +117,7 @@
   <main class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-4 sm:pt-6 space-y-6 sm:space-y-8">
 
     <!-- Overview Stats Cards -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5" id="kpiContainer">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5" id="kpiContainer">
       <!-- KPI 1: 00631L 最新收盤價 -->
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 shadow-2xl relative overflow-hidden group hover:border-indigo-500/50 transition">
         <div class="flex justify-between items-start mb-2 sm:mb-3">
@@ -175,7 +175,45 @@
         </div>
       </div>
 
-      <!-- KPI 4: 統計工作日數量 -->
+      <!-- KPI 4: 大盤融資餘額 -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 shadow-2xl relative overflow-hidden group hover:border-amber-500/50 transition">
+        <div class="flex justify-between items-start mb-2 sm:mb-3">
+          <span class="text-xs sm:text-sm font-bold text-slate-300 uppercase tracking-wider">大盤融資餘額</span>
+          <span class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg text-[10px] sm:text-xs font-extrabold bg-amber-500/20 text-amber-300 border border-amber-500/40">大盤信用</span>
+        </div>
+        <div class="flex items-baseline space-x-2 my-1">
+          <span id="kpiMarginMarketAmt" class="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight">--</span>
+          <span class="text-xs sm:text-sm font-semibold text-slate-400">億元</span>
+        </div>
+        <div class="mt-2 sm:mt-3 flex items-center text-sm sm:text-base font-bold" id="kpiMarginMarketChange">
+          <span>--</span>
+        </div>
+        <div class="mt-3 sm:mt-4 pt-2.5 sm:pt-3 border-t border-slate-800 flex justify-between text-[11px] sm:text-xs lg:text-sm text-slate-400 font-medium">
+          <span>最高: <strong id="kpiMarginMarketHigh" class="text-slate-100 font-bold">--</strong></span>
+          <span>最低: <strong id="kpiMarginMarketLow" class="text-slate-100 font-bold">--</strong></span>
+        </div>
+      </div>
+
+      <!-- KPI 5: 00631L 融資餘額 -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 shadow-2xl relative overflow-hidden group hover:border-pink-500/50 transition">
+        <div class="flex justify-between items-start mb-2 sm:mb-3">
+          <span class="text-xs sm:text-sm font-bold text-slate-300 uppercase tracking-wider">00631L 融資餘額</span>
+          <span class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg text-[10px] sm:text-xs font-extrabold bg-pink-500/20 text-pink-300 border border-pink-500/40">ETF 籌碼</span>
+        </div>
+        <div class="flex items-baseline space-x-2 my-1">
+          <span id="kpiMargin00631LBal" class="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight">--</span>
+          <span class="text-xs sm:text-sm font-semibold text-slate-400">張</span>
+        </div>
+        <div class="mt-2 sm:mt-3 flex items-center text-sm sm:text-base font-bold" id="kpiMargin00631LChange">
+          <span>--</span>
+        </div>
+        <div class="mt-3 sm:mt-4 pt-2.5 sm:pt-3 border-t border-slate-800 flex justify-between text-[11px] sm:text-xs lg:text-sm text-slate-400 font-medium">
+          <span>最高: <strong id="kpiMargin00631LHigh" class="text-slate-100 font-bold">--</strong></span>
+          <span>最低: <strong id="kpiMargin00631LLow" class="text-slate-100 font-bold">--</strong></span>
+        </div>
+      </div>
+
+      <!-- KPI 6: 統計工作日數量 -->
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 shadow-2xl relative overflow-hidden group hover:border-purple-500/50 transition">
         <div class="flex justify-between items-start mb-2 sm:mb-3">
           <span class="text-xs sm:text-sm font-bold text-slate-300 uppercase tracking-wider">數據涵蓋期間</span>
@@ -209,6 +247,14 @@
         <button onclick="switchTab('combined')" id="tabBtn-combined" class="px-3.5 py-2.5 sm:px-5 sm:py-3 rounded-xl text-xs sm:text-sm lg:text-base font-bold text-slate-300 hover:text-white hover:bg-slate-800 transition flex items-center justify-center sm:justify-start space-x-2">
           <i class="fa-solid fa-code-compare text-sm sm:text-lg"></i>
           <span class="truncate">槓桿 vs 大盤對比</span>
+        </button>
+        <button onclick="switchTab('marginMarket')" id="tabBtn-marginMarket" class="px-3.5 py-2.5 sm:px-5 sm:py-3 rounded-xl text-xs sm:text-sm lg:text-base font-bold text-slate-300 hover:text-white hover:bg-slate-800 transition flex items-center justify-center sm:justify-start space-x-2">
+          <i class="fa-solid fa-coins text-sm sm:text-lg"></i>
+          <span class="truncate">大盤融資餘額比較</span>
+        </button>
+        <button onclick="switchTab('margin00631L')" id="tabBtn-margin00631L" class="px-3.5 py-2.5 sm:px-5 sm:py-3 rounded-xl text-xs sm:text-sm lg:text-base font-bold text-slate-300 hover:text-white hover:bg-slate-800 transition flex items-center justify-center sm:justify-start space-x-2">
+          <i class="fa-solid fa-layer-group text-sm sm:text-lg"></i>
+          <span class="truncate">00631L 融資餘額比較</span>
         </button>
       </div>
 
@@ -298,15 +344,19 @@
     // Initial State & Configuration
     const SPREADSHEET_ID = "1LbCaM8wzcgchBxm0MF0SboGXKs7lbI36zHyS4S4iiog";
     
-    let activeTab = '00631L'; // '00631L' | 'market' | 'combined'
+    let activeTab = '00631L'; // '00631L' | 'market' | 'combined' | 'marginMarket' | 'margin00631L'
     let rawData = {
       "00631L": [],
-      "market": []
+      "market": [],
+      "marginMarket": [],
+      "margin00631L": []
     };
     
     let processedData = {
       "00631L": [],
-      "market": []
+      "market": [],
+      "marginMarket": [],
+      "margin00631L": []
     };
 
     let chartInstance = null;
@@ -370,6 +420,34 @@
         ["2026/08/26","46011","2.17","45832.62","1.47","2026/08/26 22:07:36"],
         ["2026/08/27","46078","0.16","45975.22","0.31","2026/08/27 22:07:36"],
         ["2026/08/28","46357","0.64","46331.45","0.77","2026/08/30 22:07:35"]
+      ],
+      "marginMarket": [
+        ["日期","融資買進(張/仟股)","融資賣出(張/仟股)","融資餘額(張/仟股)","融資餘額(億元)","融資增減(億元)","更新時間"],
+        ["2026/10/01","441109","370540","9352816","6298.67","75.71","2026/10/02 23:20:20"],
+        ["2026/10/02","409572","359687","9398006","6351.04","52.37","2026/10/03 22:02:31"],
+        ["2026/10/05","572516","555206","9409460","6333.52","-17.53","2026/10/06 22:07:35"],
+        ["2026/10/06","381543","426673","9356798","6376.57","43.05","2026/10/07 22:07:35"],
+        ["2026/10/07","373993","360993","9358246","6400.01","23.44","2026/10/08 22:07:36"],
+        ["2026/10/08","385423","305441","9406720","6464.06","64.05","2026/10/09 22:07:37"],
+        ["2026/10/12","372347","314516","9453100","6533.3","69.24","2026/10/13 22:07:38"],
+        ["2026/10/13","436812","452990","9430485","6449.79","-83.51","2026/10/14 22:07:37"],
+        ["2026/10/14","388752","343226","9467251","6515.67","65.89","2026/10/15 22:07:35"],
+        ["2026/10/15","534957","474201","9521231","6464.15","-51.41","2026/10/16 22:07:36"],
+        ["2026/10/16","343600","318542","9538664","6455.94","-8.22","2026/10/17 22:07:35"]
+      ],
+      "margin00631L": [
+        ["日期","融資買進(張)","融資賣出(張)","融資餘額(張)","融資增減(張)","更新時間"],
+        ["2026/10/01","8735","7125","181909","1579","2026/10/02 23:09:15"],
+        ["2026/10/02","6617","4175","184070","2161","2026/10/03 22:02:31"],
+        ["2026/10/05","16474","16376","184131","61","2026/10/06 22:07:35"],
+        ["2026/10/06","8808","12446","180361","-3770","2026/10/07 22:07:35"],
+        ["2026/10/07","7145","7529","179924","-437","2026/10/08 22:07:36"],
+        ["2026/10/08","9899","5546","184221","4297","2026/10/09 22:07:37"],
+        ["2026/10/12","10433","3748","190588","6367","2026/10/13 22:07:38"],
+        ["2026/10/13","25033","11643","203836","13248","2026/10/14 22:07:37"],
+        ["2026/10/14","8898","11309","201337","-2499","2026/10/15 22:07:35"],
+        ["2026/10/15","50642","8300","243393","42056","2026/10/16 22:07:36"],
+        ["2026/10/16","10141","8452","245051","1658","2026/10/17 22:07:35"]
       ]
     };
 
@@ -380,6 +458,8 @@
       // 1. Instant 0ms render using embedded/cached payload
       rawData["00631L"] = EMBEDDED_FALLBACK["00631L"];
       rawData["market"] = EMBEDDED_FALLBACK["market"];
+      rawData["marginMarket"] = EMBEDDED_FALLBACK["marginMarket"];
+      rawData["margin00631L"] = EMBEDDED_FALLBACK["margin00631L"];
       
       processWorkdayData();
       updateKpiCards();
@@ -467,15 +547,19 @@
       const startTime = performance.now();
 
       try {
-        const [res00631L, resMarket] = await Promise.all([
+        const [res00631L, resMarket, resMarginMarket, resMargin00631L] = await Promise.all([
           fetchJsonpSheet("00631L"),
-          fetchJsonpSheet("台指期貨大盤")
+          fetchJsonpSheet("台指期貨大盤"),
+          fetchJsonpSheet("融資餘額"),
+          fetchJsonpSheet("00631L融資餘額")
         ]);
 
         const duration = Math.round(performance.now() - startTime);
 
         if (res00631L && res00631L.length > 1) rawData["00631L"] = res00631L;
         if (resMarket && resMarket.length > 1) rawData["market"] = resMarket;
+        if (resMarginMarket && resMarginMarket.length > 1) rawData["marginMarket"] = resMarginMarket;
+        if (resMargin00631L && resMargin00631L.length > 1) rawData["margin00631L"] = resMargin00631L;
 
         if (statusText) statusText.textContent = `Live 已更新 (${duration}ms)`;
       } catch (err) {
@@ -568,12 +652,80 @@
         }
       });
       processedData["market"] = arrMarket;
+
+      // 3. Process 大盤融資餘額 (融資餘額)
+      const mapMarginMarket = new Map();
+      const rowsMarginMarket = rawData["marginMarket"] || [];
+      const dataRows3 = (rowsMarginMarket[0] && rowsMarginMarket[0][0] === '日期') ? rowsMarginMarket.slice(1) : rowsMarginMarket;
+
+      dataRows3.forEach(row => {
+        if (!row || row.length < 6) return;
+        const date = String(row[0]).trim();
+        const buyShares = parseFloat(String(row[1]).replace(/,/g, ''));
+        const sellShares = parseFloat(String(row[2]).replace(/,/g, ''));
+        const balanceShares = parseFloat(String(row[3]).replace(/,/g, ''));
+        const balanceAmt = parseFloat(String(row[4]).replace(/,/g, ''));
+        const changeAmt = parseFloat(String(row[5]).replace(/,/g, ''));
+        const updateTime = row[6] ? String(row[6]).trim() : '';
+
+        if (!date || isNaN(balanceAmt)) return;
+
+        mapMarginMarket.set(date, {
+          date,
+          buyShares: isNaN(buyShares) ? 0 : buyShares,
+          sellShares: isNaN(sellShares) ? 0 : sellShares,
+          balanceShares: isNaN(balanceShares) ? 0 : balanceShares,
+          balanceAmt,
+          changeAmt: isNaN(changeAmt) ? 0 : changeAmt,
+          updateTime
+        });
+      });
+
+      let arrMarginMarket = Array.from(mapMarginMarket.values()).sort((a, b) => new Date(a.date) - new Date(b.date));
+      processedData["marginMarket"] = arrMarginMarket;
+
+      // 4. Process 00631L 融資餘額 (00631L融資餘額)
+      // Filter out non-trading weekend duplicate dates by checking workday set or deduplicating identical consecutive balances on weekends
+      const mapMargin00631L = new Map();
+      const rowsMargin00631L = rawData["margin00631L"] || [];
+      const dataRows4 = (rowsMargin00631L[0] && rowsMargin00631L[0][0] === '日期') ? rowsMargin00631L.slice(1) : rowsMargin00631L;
+
+      dataRows4.forEach(row => {
+        if (!row || row.length < 5) return;
+        const date = String(row[0]).trim();
+        const dObj = new Date(date);
+        const dayOfWeek = dObj.getDay();
+        // Skip Saturday (6) and Sunday (0) non-workday automated script runs
+        if (dayOfWeek === 0 || dayOfWeek === 6) return;
+
+        const buyLots = parseFloat(String(row[1]).replace(/,/g, ''));
+        const sellLots = parseFloat(String(row[2]).replace(/,/g, ''));
+        const balanceLots = parseFloat(String(row[3]).replace(/,/g, ''));
+        const changeLots = parseFloat(String(row[4]).replace(/,/g, ''));
+        const updateTime = row[5] ? String(row[5]).trim() : '';
+
+        if (!date || isNaN(balanceLots)) return;
+
+        mapMargin00631L.set(date, {
+          date,
+          buyLots: isNaN(buyLots) ? 0 : buyLots,
+          sellLots: isNaN(sellLots) ? 0 : sellLots,
+          balanceLots,
+          changeLots: isNaN(changeLots) ? 0 : changeLots,
+          updateTime
+        });
+      });
+
+      let arrMargin00631L = Array.from(mapMargin00631L.values()).sort((a, b) => new Date(a.date) - new Date(b.date));
+      processedData["margin00631L"] = arrMargin00631L;
     }
 
     // Update Top Metric KPI Cards
     function updateKpiCards() {
       const data00631 = processedData["00631L"];
       const dataMarket = processedData["market"];
+      const dataMarginMarket = processedData["marginMarket"];
+      const dataMargin00631L = processedData["margin00631L"];
 
       if (data00631.length > 0) {
         const latest = data00631[data00631.length - 1];
@@ -624,6 +776,36 @@
         document.getElementById('kpiTaiexHigh').textContent = Math.max(...taiexPrices).toLocaleString();
         document.getElementById('kpiTaiexLow').textContent = Math.min(...taiexPrices).toLocaleString();
       }
+
+      if (dataMarginMarket.length > 0) {
+        const latestMM = dataMarginMarket[dataMarginMarket.length - 1];
+        document.getElementById('kpiMarginMarketAmt').textContent = latestMM.balanceAmt.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        const mmIsUp = latestMM.changeAmt >= 0;
+        const mmColor = mmIsUp ? 'text-rose-500' : 'text-emerald-400';
+        const mmIcon = mmIsUp ? 'fa-caret-up' : 'fa-caret-down';
+        const mmSign = mmIsUp ? '+' : '';
+        document.getElementById('kpiMarginMarketChange').className = `mt-2 sm:mt-3 flex items-center text-sm sm:text-base font-bold ${mmColor}`;
+        document.getElementById('kpiMarginMarketChange').innerHTML = `<i class="fa-solid ${mmIcon} mr-1.5 text-base sm:text-lg"></i> 單日增減 ${mmSign}${latestMM.changeAmt.toFixed(2)} 億`;
+
+        const mmAmts = dataMarginMarket.map(d => d.balanceAmt);
+        document.getElementById('kpiMarginMarketHigh').textContent = Math.max(...mmAmts).toFixed(2);
+        document.getElementById('kpiMarginMarketLow').textContent = Math.min(...mmAmts).toFixed(2);
+      }
+
+      if (dataMargin00631L.length > 0) {
+        const latestM631 = dataMargin00631L[dataMargin00631L.length - 1];
+        document.getElementById('kpiMargin00631LBal').textContent = latestM631.balanceLots.toLocaleString();
+        const m631IsUp = latestM631.changeLots >= 0;
+        const m631Color = m631IsUp ? 'text-rose-500' : 'text-emerald-400';
+        const m631Icon = m631IsUp ? 'fa-caret-up' : 'fa-caret-down';
+        const m631Sign = m631IsUp ? '+' : '';
+        document.getElementById('kpiMargin00631LChange').className = `mt-2 sm:mt-3 flex items-center text-sm sm:text-base font-bold ${m631Color}`;
+        document.getElementById('kpiMargin00631LChange').innerHTML = `<i class="fa-solid ${m631Icon} mr-1.5 text-base sm:text-lg"></i> 單日增減 ${m631Sign}${latestM631.changeLots.toLocaleString()} 張`;
+
+        const m631Lots = dataMargin00631L.map(d => d.balanceLots);
+        document.getElementById('kpiMargin00631LHigh').textContent = Math.max(...m631Lots).toLocaleString();
+        document.getElementById('kpiMargin00631LLow').textContent = Math.min(...m631Lots).toLocaleString();
+      }
     }
 
     // Initialize Apache ECharts
@@ -653,7 +835,7 @@
     function switchTab(tabName) {
       activeTab = tabName;
 
-      ['00631L', 'market', 'combined'].forEach(t => {
+      ['00631L', 'market', 'combined', 'marginMarket', 'margin00631L'].forEach(t => {
         const btn = document.getElementById(`tabBtn-${t}`);
         if (t === tabName) {
           btn.className = 'px-3.5 py-2.5 sm:px-5 sm:py-3 rounded-xl text-xs sm:text-sm lg:text-base font-bold transition flex items-center justify-center sm:justify-start space-x-2 bg-indigo-600 text-white shadow-lg shadow-indigo-600/30';
@@ -976,6 +1158,296 @@
         };
 
         chartInstance.setOption(option);
+
+      } else if (activeTab === 'marginMarket') {
+        document.getElementById('chartTitle').innerHTML = '<span class="w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full bg-amber-400 shrink-0"></span> 大盤融資餘額 (億元) vs. 大盤加權指數 趨勢比較';
+        document.getElementById('chartSubtitle').textContent = '雙 Y 軸同框比較：大盤融資餘額 (億元) 折線、大盤加權指數折線與單日融資增減柱狀圖';
+
+        const listMargin = processedData["marginMarket"];
+        const listMarket = processedData["market"];
+        const marketMap = new Map(listMarket.map(m => [m.date, m]));
+
+        const dates = listMargin.map(d => escapeHTML(d.date));
+        const balanceAmts = listMargin.map(d => d.balanceAmt);
+        const changeAmts = listMargin.map(d => d.changeAmt);
+        const taiexPrices = listMargin.map(d => {
+          const m = marketMap.get(d.date);
+          return m ? m.taiexPrice : null;
+        });
+
+        const seriesList = [
+          {
+            name: '大盤融資餘額 (億元)',
+            type: 'line',
+            data: balanceAmts,
+            smooth: true,
+            yAxisIndex: 0,
+            symbol: 'circle',
+            symbolSize: isMobile ? 6 : 8,
+            lineStyle: { width: isMobile ? 2.5 : 4, color: '#f59e0b' },
+            itemStyle: { color: '#f59e0b' },
+            areaStyle: {
+              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                { offset: 0, color: 'rgba(245, 158, 11, 0.35)' },
+                { offset: 1, color: 'rgba(245, 158, 11, 0.02)' }
+              ])
+            },
+            markPoint: {
+              label: { fontSize: isMobile ? 11 : 13, fontWeight: 'bold' },
+              data: [
+                { type: 'max', name: '最高' },
+                { type: 'min', name: '最低' }
+              ]
+            }
+          },
+          {
+            name: '大盤加權指數 (點)',
+            type: 'line',
+            data: taiexPrices,
+            smooth: true,
+            yAxisIndex: 1,
+            symbol: 'circle',
+            symbolSize: isMobile ? 5 : 7,
+            lineStyle: { width: isMobile ? 2.5 : 3.5, color: '#10b981', type: 'dashed' },
+            itemStyle: { color: '#10b981' }
+          }
+        ];
+
+        if (showMA) {
+          seriesList.push({
+            name: '融資 MA5 (5日均線)',
+            type: 'line',
+            data: calculateMA(5, balanceAmts),
+            smooth: true,
+            yAxisIndex: 0,
+            lineStyle: { width: isMobile ? 1.5 : 2, color: '#ec4899', type: 'dotted' },
+            symbol: 'none'
+          });
+        }
+
+        const option = {
+          backgroundColor: 'transparent',
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: { type: 'cross' },
+            textStyle: { fontSize: isMobile ? 12 : 15 },
+            extraCssText: 'max-width: 300px; whitespace: normal;',
+            formatter: function (params) {
+              const idx = params[0].dataIndex;
+              const item = listMargin[idx];
+              const mItem = item ? marketMap.get(item.date) : null;
+              let res = `<div class="font-bold border-b border-slate-700 pb-1 mb-1.5 text-xs sm:text-base">${escapeHTML(params[0].name)} 大盤融資與指數</div>`;
+              if (item) {
+                const chgColor = item.changeAmt >= 0 ? '#ef4444' : '#22c55e';
+                const chgSign = item.changeAmt >= 0 ? '+' : '';
+                res += `<div class="my-1 text-xs sm:text-base">融資餘額: <strong class="text-amber-400 text-sm sm:text-lg">${item.balanceAmt.toFixed(2)}</strong> 億元</div>`;
+                res += `<div class="my-1 text-xs sm:text-base">單日增減: <span style="color:${chgColor}" class="font-bold">${chgSign}${item.changeAmt.toFixed(2)} 億元</span></div>`;
+                res += `<div class="my-1 text-xs sm:text-sm text-slate-300">融資餘額(張): ${item.balanceShares.toLocaleString()} 張</div>`;
+              }
+              if (mItem) {
+                const tColor = mItem.taiexChangePct >= 0 ? '#ef4444' : '#22c55e';
+                const tSign = mItem.taiexChangePct >= 0 ? '+' : '';
+                res += `<div class="my-1 pt-1 border-t border-slate-700/80 text-xs sm:text-base">大盤指數: <strong class="text-emerald-400">${mItem.taiexPrice.toLocaleString()}</strong> (${tSign}${mItem.taiexChangePct.toFixed(2)}%)</div>`;
+              }
+              return res;
+            }
+          },
+          legend: {
+            data: seriesList.map(s => s.name),
+            textStyle: { color: '#cbd5e1', fontSize: isMobile ? 11 : 14, fontWeight: 'bold' },
+            top: 0,
+            itemGap: isMobile ? 8 : 15
+          },
+          grid: {
+            left: isMobile ? '3%' : '3%',
+            right: isMobile ? '3%' : '4%',
+            bottom: isMobile ? '20%' : '15%',
+            top: isMobile ? '18%' : '12%',
+            containLabel: true
+          },
+          xAxis: {
+            type: 'category',
+            data: dates,
+            axisLine: { lineStyle: { color: '#475569', width: 2 } },
+            axisLabel: {
+              color: '#cbd5e1',
+              fontSize: isMobile ? 10 : 13,
+              fontWeight: 'bold',
+              rotate: isSmallMobile ? 30 : 0
+            }
+          },
+          yAxis: [
+            {
+              type: 'value',
+              name: isMobile ? '融資(億)' : '大盤融資餘額 (億元)',
+              scale: true,
+              nameTextStyle: { fontSize: isMobile ? 10 : 13, fontWeight: 'bold', color: '#f59e0b' },
+              axisLine: { lineStyle: { color: '#f59e0b', width: 2 } },
+              axisLabel: { color: '#f59e0b', fontSize: isMobile ? 10 : 13, fontWeight: 'bold' },
+              splitLine: { lineStyle: { color: '#1e293b' } }
+            },
+            {
+              type: 'value',
+              name: isMobile ? '大盤(點)' : '大盤加權指數 (點)',
+              scale: true,
+              nameTextStyle: { fontSize: isMobile ? 10 : 13, fontWeight: 'bold', color: '#10b981' },
+              axisLine: { lineStyle: { color: '#10b981', width: 2 } },
+              axisLabel: { color: '#10b981', fontSize: isMobile ? 10 : 13, fontWeight: 'bold' },
+              splitLine: { show: false }
+            }
+          ],
+          dataZoom: [
+            { type: 'inside', start: 0, end: 100 },
+            { type: 'slider', bottom: '1%', height: isMobile ? 18 : 24, borderColor: '#334155', textStyle: { color: '#cbd5e1', fontSize: isMobile ? 10 : 12 } }
+          ],
+          series: seriesList
+        };
+
+        chartInstance.setOption(option);
+
+      } else if (activeTab === 'margin00631L') {
+        document.getElementById('chartTitle').innerHTML = '<span class="w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full bg-pink-500 shrink-0"></span> 00631L 融資餘額 (張) vs. 00631L 收盤價 趨勢比較';
+        document.getElementById('chartSubtitle').textContent = '雙 Y 軸同框比較：00631L 融資餘額 (張) 與 00631L 股價走勢（觀察散戶籌碼與股價關係）';
+
+        const listMargin = processedData["margin00631L"];
+        const list00631 = processedData["00631L"];
+        const priceMap = new Map(list00631.map(d => [d.date, d]));
+
+        const dates = listMargin.map(d => escapeHTML(d.date));
+        const balanceLots = listMargin.map(d => d.balanceLots);
+        const prices00631 = listMargin.map(d => {
+          const p = priceMap.get(d.date);
+          return p ? p.price : null;
+        });
+
+        const seriesList = [
+          {
+            name: '00631L 融資餘額 (張)',
+            type: 'line',
+            data: balanceLots,
+            smooth: true,
+            yAxisIndex: 0,
+            symbol: 'circle',
+            symbolSize: isMobile ? 6 : 8,
+            lineStyle: { width: isMobile ? 2.5 : 4, color: '#ec4899' },
+            itemStyle: { color: '#ec4899' },
+            areaStyle: {
+              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                { offset: 0, color: 'rgba(236, 72, 153, 0.35)' },
+                { offset: 1, color: 'rgba(236, 72, 153, 0.02)' }
+              ])
+            },
+            markPoint: {
+              label: { fontSize: isMobile ? 11 : 13, fontWeight: 'bold' },
+              data: [
+                { type: 'max', name: '最高' },
+                { type: 'min', name: '最低' }
+              ]
+            }
+          },
+          {
+            name: '00631L 收盤價 (TWD)',
+            type: 'line',
+            data: prices00631,
+            smooth: true,
+            yAxisIndex: 1,
+            symbol: 'circle',
+            symbolSize: isMobile ? 5 : 7,
+            lineStyle: { width: isMobile ? 2.5 : 3.5, color: '#6366f1', type: 'dashed' },
+            itemStyle: { color: '#6366f1' }
+          }
+        ];
+
+        if (showMA) {
+          seriesList.push({
+            name: '融資 MA5 (5日均線)',
+            type: 'line',
+            data: calculateMA(5, balanceLots),
+            smooth: true,
+            yAxisIndex: 0,
+            lineStyle: { width: isMobile ? 1.5 : 2, color: '#f59e0b', type: 'dotted' },
+            symbol: 'none'
+          });
+        }
+
+        const option = {
+          backgroundColor: 'transparent',
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: { type: 'cross' },
+            textStyle: { fontSize: isMobile ? 12 : 15 },
+            extraCssText: 'max-width: 300px; whitespace: normal;',
+            formatter: function (params) {
+              const idx = params[0].dataIndex;
+              const item = listMargin[idx];
+              const pItem = item ? priceMap.get(item.date) : null;
+              let res = `<div class="font-bold border-b border-slate-700 pb-1 mb-1.5 text-xs sm:text-base">${escapeHTML(params[0].name)} 00631L 融資與股價</div>`;
+              if (item) {
+                const chgColor = item.changeLots >= 0 ? '#ef4444' : '#22c55e';
+                const chgSign = item.changeLots >= 0 ? '+' : '';
+                res += `<div class="my-1 text-xs sm:text-base">融資餘額: <strong class="text-pink-400 text-sm sm:text-lg">${item.balanceLots.toLocaleString()}</strong> 張</div>`;
+                res += `<div class="my-1 text-xs sm:text-base">單日增減: <span style="color:${chgColor}" class="font-bold">${chgSign}${item.changeLots.toLocaleString()} 張</span></div>`;
+                res += `<div class="my-1 text-xs sm:text-sm text-slate-300">買進: ${item.buyLots.toLocaleString()} 張 / 賣出: ${item.sellLots.toLocaleString()} 張</div>`;
+              }
+              if (pItem) {
+                const pSign = pItem.change >= 0 ? '+' : '';
+                res += `<div class="my-1 pt-1 border-t border-slate-700/80 text-xs sm:text-base">00631L 收盤: <strong class="text-indigo-400">${pItem.price.toFixed(2)}</strong> 元 (${pSign}${pItem.changePercent.toFixed(2)}%)</div>`;
+              }
+              return res;
+            }
+          },
+          legend: {
+            data: seriesList.map(s => s.name),
+            textStyle: { color: '#cbd5e1', fontSize: isMobile ? 11 : 14, fontWeight: 'bold' },
+            top: 0,
+            itemGap: isMobile ? 8 : 15
+          },
+          grid: {
+            left: isMobile ? '3%' : '3%',
+            right: isMobile ? '3%' : '4%',
+            bottom: isMobile ? '20%' : '15%',
+            top: isMobile ? '18%' : '12%',
+            containLabel: true
+          },
+          xAxis: {
+            type: 'category',
+            data: dates,
+            axisLine: { lineStyle: { color: '#475569', width: 2 } },
+            axisLabel: {
+              color: '#cbd5e1',
+              fontSize: isMobile ? 10 : 13,
+              fontWeight: 'bold',
+              rotate: isSmallMobile ? 30 : 0
+            }
+          },
+          yAxis: [
+            {
+              type: 'value',
+              name: isMobile ? '融資(張)' : '00631L 融資餘額 (張)',
+              scale: true,
+              nameTextStyle: { fontSize: isMobile ? 10 : 13, fontWeight: 'bold', color: '#ec4899' },
+              axisLine: { lineStyle: { color: '#ec4899', width: 2 } },
+              axisLabel: { color: '#ec4899', fontSize: isMobile ? 10 : 13, fontWeight: 'bold' },
+              splitLine: { lineStyle: { color: '#1e293b' } }
+            },
+            {
+              type: 'value',
+              name: isMobile ? '股價(元)' : '00631L 收盤價 (TWD)',
+              scale: true,
+              nameTextStyle: { fontSize: isMobile ? 10 : 13, fontWeight: 'bold', color: '#6366f1' },
+              axisLine: { lineStyle: { color: '#6366f1', width: 2 } },
+              axisLabel: { color: '#6366f1', fontSize: isMobile ? 10 : 13, fontWeight: 'bold' },
+              splitLine: { show: false }
+            }
+          ],
+          dataZoom: [
+            { type: 'inside', start: 0, end: 100 },
+            { type: 'slider', bottom: '1%', height: isMobile ? 18 : 24, borderColor: '#334155', textStyle: { color: '#cbd5e1', fontSize: isMobile ? 10 : 12 } }
+          ],
+          series: seriesList
+        };
+
+        chartInstance.setOption(option);
       }
     }
 
@@ -1049,6 +1521,101 @@
           `;
         });
 
+      } else if (activeTab === 'marginMarket') {
+        document.getElementById('tableTitle').innerHTML = '<i class="fa-solid fa-coins text-amber-400 text-base sm:text-xl"></i> 大盤融資餘額與加權指數 明細表';
+
+        headElem.innerHTML = `
+          <tr>
+            <th class="px-3 sm:px-5 py-2.5 sm:py-4 text-xs sm:text-sm lg:text-base">工作日日期</th>
+            <th class="px-3 sm:px-5 py-2.5 sm:py-4 text-xs sm:text-sm lg:text-base">融資買進 (張)</th>
+            <th class="px-3 sm:px-5 py-2.5 sm:py-4 text-xs sm:text-sm lg:text-base">融資賣出 (張)</th>
+            <th class="px-3 sm:px-5 py-2.5 sm:py-4 text-xs sm:text-sm lg:text-base">融資餘額 (張)</th>
+            <th class="px-3 sm:px-5 py-2.5 sm:py-4 text-xs sm:text-sm lg:text-base">融資餘額 (億元)</th>
+            <th class="px-3 sm:px-5 py-2.5 sm:py-4 text-xs sm:text-sm lg:text-base">融資增減 (億元)</th>
+            <th class="px-3 sm:px-5 py-2.5 sm:py-4 text-xs sm:text-sm lg:text-base">資料更新時間</th>
+          </tr>
+        `;
+
+        let list = processedData["marginMarket"].slice().reverse();
+        if (searchVal) {
+          list = list.filter(item => item.date.toLowerCase().includes(searchVal));
+        }
+
+        if (list.length === 0) {
+          bodyElem.innerHTML = `<tr><td colspan="7" class="px-3 sm:px-5 py-6 sm:py-8 text-center text-slate-400 text-xs sm:text-base">無符合條件之資料</td></tr>`;
+          return;
+        }
+
+        list.forEach(item => {
+          const isUp = item.changeAmt >= 0;
+          const color = isUp ? 'text-rose-500' : 'text-emerald-400';
+          const sign = isUp ? '+' : '';
+
+          const safeDate = escapeHTML(item.date);
+          const safeUpdateTime = escapeHTML(item.updateTime || item.date);
+
+          bodyElem.innerHTML += `
+            <tr class="hover:bg-slate-800/60 transition">
+              <td class="px-3 sm:px-5 py-2.5 sm:py-4 font-bold text-slate-100">${safeDate}</td>
+              <td class="px-3 sm:px-5 py-2.5 sm:py-4 font-medium text-slate-200">${item.buyShares.toLocaleString()}</td>
+              <td class="px-3 sm:px-5 py-2.5 sm:py-4 font-medium text-slate-200">${item.sellShares.toLocaleString()}</td>
+              <td class="px-3 sm:px-5 py-2.5 sm:py-4 font-bold text-slate-100">${item.balanceShares.toLocaleString()}</td>
+              <td class="px-3 sm:px-5 py-2.5 sm:py-4 font-extrabold text-amber-400 text-xs sm:text-base lg:text-lg">${item.balanceAmt.toFixed(2)}</td>
+              <td class="px-3 sm:px-5 py-2.5 sm:py-4 font-bold ${color}">${sign}${item.changeAmt.toFixed(2)}</td>
+              <td class="px-3 sm:px-5 py-2.5 sm:py-4 text-slate-300 font-medium">${safeUpdateTime}</td>
+            </tr>
+          `;
+        });
+
+      } else if (activeTab === 'margin00631L') {
+        document.getElementById('tableTitle').innerHTML = '<i class="fa-solid fa-layer-group text-pink-400 text-base sm:text-xl"></i> 00631L 融資餘額與股價 明細表';
+
+        headElem.innerHTML = `
+          <tr>
+            <th class="px-3 sm:px-5 py-2.5 sm:py-4 text-xs sm:text-sm lg:text-base">工作日日期</th>
+            <th class="px-3 sm:px-5 py-2.5 sm:py-4 text-xs sm:text-sm lg:text-base">融資買進 (張)</th>
+            <th class="px-3 sm:px-5 py-2.5 sm:py-4 text-xs sm:text-sm lg:text-base">融資賣出 (張)</th>
+            <th class="px-3 sm:px-5 py-2.5 sm:py-4 text-xs sm:text-sm lg:text-base">融資餘額 (張)</th>
+            <th class="px-3 sm:px-5 py-2.5 sm:py-4 text-xs sm:text-sm lg:text-base">融資增減 (張)</th>
+            <th class="px-3 sm:px-5 py-2.5 sm:py-4 text-xs sm:text-sm lg:text-base">00631L 收盤價</th>
+            <th class="px-3 sm:px-5 py-2.5 sm:py-4 text-xs sm:text-sm lg:text-base">資料更新時間</th>
+          </tr>
+        `;
+
+        const priceMap = new Map(processedData["00631L"].map(d => [d.date, d]));
+        let list = processedData["margin00631L"].slice().reverse();
+        if (searchVal) {
+          list = list.filter(item => item.date.toLowerCase().includes(searchVal));
+        }
+
+        if (list.length === 0) {
+          bodyElem.innerHTML = `<tr><td colspan="7" class="px-3 sm:px-5 py-6 sm:py-8 text-center text-slate-400 text-xs sm:text-base">無符合條件之資料</td></tr>`;
+          return;
+        }
+
+        list.forEach(item => {
+          const isUp = item.changeLots >= 0;
+          const color = isUp ? 'text-rose-500' : 'text-emerald-400';
+          const sign = isUp ? '+' : '';
+          const pItem = priceMap.get(item.date);
+          const priceStr = pItem ? `${pItem.price.toFixed(2)} 元` : '--';
+
+          const safeDate = escapeHTML(item.date);
+          const safeUpdateTime = escapeHTML(item.updateTime || item.date);
+
+          bodyElem.innerHTML += `
+            <tr class="hover:bg-slate-800/60 transition">
+              <td class="px-3 sm:px-5 py-2.5 sm:py-4 font-bold text-slate-100">${safeDate}</td>
+              <td class="px-3 sm:px-5 py-2.5 sm:py-4 font-medium text-slate-200">${item.buyLots.toLocaleString()}</td>
+              <td class="px-3 sm:px-5 py-2.5 sm:py-4 font-medium text-slate-200">${item.sellLots.toLocaleString()}</td>
+              <td class="px-3 sm:px-5 py-2.5 sm:py-4 font-extrabold text-pink-400 text-xs sm:text-base lg:text-lg">${item.balanceLots.toLocaleString()}</td>
+              <td class="px-3 sm:px-5 py-2.5 sm:py-4 font-bold ${color}">${sign}${item.changeLots.toLocaleString()}</td>
+              <td class="px-3 sm:px-5 py-2.5 sm:py-4 font-bold text-white">${priceStr}</td>
+              <td class="px-3 sm:px-5 py-2.5 sm:py-4 text-slate-300 font-medium">${safeUpdateTime}</td>
+            </tr>
+          `;
+        });
+
       } else {
         document.getElementById('tableTitle').innerHTML = '<i class="fa-solid fa-table text-cyan-400 text-base sm:text-xl"></i> 台指期貨與大盤指數 明細表';
 
@@ -1106,6 +1673,16 @@
         csvContent += "日期,00631L收盤價,單日漲跌,單日漲跌幅%,更新時間\n";
         processedData["00631L"].forEach(row => {
           csvContent += `"${row.date}",${row.price},${row.change},${row.changePercent}%,"${row.updateTime}"\n`;
+        });
+      } else if (activeTab === 'marginMarket') {
+        csvContent += "日期,融資買進(張),融資賣出(張),融資餘額(張),融資餘額(億元),融資增減(億元),更新時間\n";
+        processedData["marginMarket"].forEach(row => {
+          csvContent += `"${row.date}",${row.buyShares},${row.sellShares},${row.balanceShares},${row.balanceAmt},${row.changeAmt},"${row.updateTime}"\n`;
+        });
+      } else if (activeTab === 'margin00631L') {
+        csvContent += "日期,融資買進(張),融資賣出(張),融資餘額(張),融資增減(張),更新時間\n";
+        processedData["margin00631L"].forEach(row => {
+          csvContent += `"${row.date}",${row.buyLots},${row.sellLots},${row.balanceLots},${row.changeLots},"${row.updateTime}"\n`;
         });
       } else {
         csvContent += "日期,台指期貨收盤點數,期貨漲跌%,大盤加權指數,大盤漲跌%,更新時間\n";
