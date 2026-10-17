@@ -552,6 +552,21 @@
       });
 
       let arrMarket = Array.from(mapMarket.values()).sort((a, b) => new Date(a.date) - new Date(b.date));
+      arrMarket.forEach((item, idx) => {
+        if (idx > 0) {
+          const prevTx = arrMarket[idx - 1].txPrice;
+          if (prevTx > 0) {
+            item.txChangePct = +(((item.txPrice - prevTx) / prevTx) * 100).toFixed(2);
+          }
+          const prevTaiex = arrMarket[idx - 1].taiexPrice;
+          if (isNaN(item.taiexChangePct) && prevTaiex > 0) {
+            item.taiexChangePct = +(((item.taiexPrice - prevTaiex) / prevTaiex) * 100).toFixed(2);
+          }
+        } else {
+          if (isNaN(item.txChangePct)) item.txChangePct = 0;
+          if (isNaN(item.taiexChangePct)) item.taiexChangePct = 0;
+        }
+      });
       processedData["market"] = arrMarket;
     }
 
